@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace AdventOfCode.Solutions.Year2019 {
 
     class Day05 : ASolution {
@@ -7,11 +10,27 @@ namespace AdventOfCode.Solutions.Year2019 {
         }
 
         protected override string SolvePartOne() {
-            return null; 
+            var output = new List<int>();
+            string s = Input.Trim('\n');
+            IntCode cpu = IntCode.Create(s);
+            cpu.GetInput += (i) => 1;
+            cpu.Output += (s, e) =>
+            {
+                output.Add(e);
+                System.Console.WriteLine(e);
+            };
+            cpu.Run();
+            return output.Last().ToString(); 
         }
 
         protected override string SolvePartTwo() {
-            return null; 
+            var output = new List<int>();
+            string s = Input.Trim('\n');
+            IntCode cpu = IntCode.Create(s);
+            cpu.GetInput += (i) => 5;
+            cpu.Output += (s, e) => output.Add(e);
+            cpu.Run();
+            return output.Last().ToString();
         }
     }
 }
