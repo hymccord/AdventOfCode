@@ -1,18 +1,20 @@
 using System; 
 using System.Collections; 
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using System.Composition.Convention;
+using System.Composition.Hosting;
 using System.Linq; 
 using System.Reflection; 
 
 namespace AdventOfCode.Solutions {
     
-    class SolutionCollector : IEnumerable<ASolution> {
+    class SolutionCollector : IEnumerable<ISolution> {
 
-        IEnumerable<ASolution> Solutions;
+        IEnumerable<ISolution> Solutions;
 
-        public SolutionCollector(int year, int[] days) => Solutions = LoadSolutions(year, days);
+        public SolutionCollector(int year, HashSet<int> days) => Solutions = LoadSolutions(year, days);
 
-        public ASolution GetSolution(int day) {
+        public ISolution GetSolution(int day) {
             try {
                 return Solutions.Single(s => s.Day == day);
             } catch(InvalidOperationException) {
@@ -20,7 +22,7 @@ namespace AdventOfCode.Solutions {
             }
         }
 
-        public IEnumerator<ASolution> GetEnumerator() {
+        public IEnumerator<ISolution> GetEnumerator() {
             return Solutions.GetEnumerator(); 
         }
 
@@ -28,22 +30,21 @@ namespace AdventOfCode.Solutions {
             return GetEnumerator(); 
         }
 
-        IEnumerable<ASolution> LoadSolutions(int year, int[] days) {
-            if(days.Sum() == 0) {
-                var solutions = Assembly
-                    .GetExecutingAssembly()
-                    .GetTypes()
-                    .Where(type => type.Namespace == $"AdventOfCode.Solutions.Year{year}");
-                foreach(Type solution in solutions) {
-                    yield return (ASolution) Activator.CreateInstance(solution);
-                }
-            } else {
-                foreach(int day in days) {
-                    var solution = Type.GetType($"AdventOfCode.Solutions.Year{year}.Day{day.ToString("D2")}");
-                    if(solution != null) {
-                        yield return (ASolution) Activator.CreateInstance(solution); 
-                    }
-                }
+        IEnumerable<ISolution> LoadSolutions(int year, HashSet<int> days)
+        {
+
+            var conventions = new ConventionBuilder();
+            conventions.ForTypesDerivedFrom<ISolution>().ExportInterfaces();
+
+            var configuration = new ContainerConfiguration()
+                .WithAssembly(Assembly.GetExecutingAssembly(), conventions);
+
+            using (var container = configuration.CreateContainer())
+            {
+                var e = container.GetExports<ISolution>()
+                    .Where(i => i.Year == year && (days.Sum() == 0 || days.Contains(i.Day) ))
+                    .OrderBy(i => i.Day);
+                return e;
             }
         }
     }

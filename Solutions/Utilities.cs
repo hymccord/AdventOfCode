@@ -54,5 +54,15 @@ namespace AdventOfCode.Solutions {
                 .Select(s => shouldTrim ? s.Trim() : s)
                 .ToArray();
         }
+
+        public static IEnumerable<IEnumerable<T>> Permutate<T>(this IEnumerable<T> source, int length)
+        {
+            if (length == 1)
+                return source.Select(t => new T[] { t });
+
+            return source.Permutate(length - 1)
+                .SelectMany(t => source.Where(e => !t.Contains(e)),
+                (t1, t2) => t1.Concat(new T[] { t2 }));
+        }
     }
 }
