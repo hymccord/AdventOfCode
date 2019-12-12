@@ -8,25 +8,26 @@ namespace AdventOfCode.Solutions.Year2019
 {
     internal class IntCode
     {
-        public Func<int, int> GetInput { get; set; } = delegate { return 0; };
+        public Func<long, long> GetInput { get; set; } = delegate { return 0; };
 
         public event EventHandler Halt;
-        public event EventHandler<int> Output;
+        public event EventHandler<long> Output;
 
-        ReadOnlyMemory<int> program;
+        long[] program;
         readonly IntCodeInstruction[] _opCodeHandlers;
 
         internal State state;
         internal bool askInput = false;
 
-        public int[] ByteCode => state.memory;
+        public Dictionary<long, long> ByteCode => state.memory;
 
-        public int InstructionPointer { get; internal set; }
+        public long InstructionPointer { get; internal set; }
 
         internal struct State
         {
-            public int[] memory;
-            public int inputRequest;
+            public Dictionary<long, long> memory;
+            public long inputRequest;
+            public long relativeBase;
         }
 
         static IntCode()
@@ -37,9 +38,8 @@ namespace AdventOfCode.Solutions.Year2019
         IntCode(string input)
         {
             _opCodeHandlers = OpCodeHandlersTable.Handlers;
-            program = input.Split(',').Select(int.Parse).ToArray();
-            state.memory = new int[program.Length];
-            program.CopyTo(state.memory);
+            program = input.Split(',').Select(long.Parse).ToArray();
+            state.memory = program.Select((v, i) => new { v, i }).ToDictionary(a => (long)a.i, a => a.v);
         }
 
         public static IntCode Create(string input)
@@ -50,37 +50,94 @@ namespace AdventOfCode.Solutions.Year2019
         public void Reset()
         {
             InstructionPointer = 0;
-            state.inputRequest = 0;
-            program.CopyTo(state.memory);
+            state = new State();
+            state.memory = program.Select((v, i) => new { v, i }).ToDictionary(a => (long)a.i, a => a.v);
         }
 
         public void Run()
         {
-            int opCode;
+            long opCode;
             while (true)
             {
                 opCode = Read();
-                if (opCode % 100 == 99)
+                if (opCode % DecoderConstants.NumberOfCodeValues == 99)
                 {
                     Halt?.Invoke(this, EventArgs.Empty);
                     break;
                 }
 
-                Decode(_opCodeHandlers[opCode % 100], opCode / 100);
+                Decode(_opCodeHandlers[opCode % 100], opCode);
             }
         }
 
-        private void Decode(IntCodeInstruction handler, int parameterMode)
+        private void Decode(IntCodeInstruction handler, long opCode)
         {
-            handler.Execute(this, parameterMode);
+            handler.Execute(this, opCode);
         }
 
-        private int Read()
+        private long Read()
         {
             return state.memory[InstructionPointer++];
         }
 
-        internal void RaiseOutput(int s) => Output?.Invoke(this, s);
+        internal void RaiseOutput(long s) => Output?.Invoke(this, s);
+
+        internal long GetParameter(long parameterIndex, long opCode)
+        {
+            int index = (int)Math.Pow(10, 2 + parameterIndex);
+            var mode = (ParameterMode)(opCode / index % 10);
+            long value;
+            switch (mode)
+            {
+                case ParameterMode.Position:
+                    value = GetMemory(GetMemory(InstructionPointer));
+                    break;
+                case ParameterMode.Immediate:
+                    value = GetMemory(InstructionPointer);
+                    break;
+                case ParameterMode.Relative:
+                    value = GetMemory(state.relativeBase + GetMemory(InstructionPointer));
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            InstructionPointer++;
+            return value;
+        }
+
+        internal void SetParameter(long parameterIndex, long parameterMode, long value)
+        {
+            int index = (int)Math.Pow(10, 2 + parameterIndex);
+            var mode = (ParameterMode)(parameterMode / index % 10);
+            switch (mode)
+            {
+                case ParameterMode.Position:
+                    SetMemory(GetMemory(InstructionPointer), value);
+                    break;
+                case ParameterMode.Immediate:
+                    SetMemory(InstructionPointer, value);
+                    break;
+                case ParameterMode.Relative:
+                    SetMemory(state.relativeBase + GetMemory(InstructionPointer), value);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            InstructionPointer++;
+        }
+
+        private long GetMemory(long index)
+        {
+            if (!state.memory.ContainsKey(index))
+                state.memory[index] = 0;
+
+            return state.memory[index];
+        }
+
+        private void SetMemory(long index, long value)
+        {
+            state.memory[index] = value;
+        }
     }
     abstract class IntCodeInstruction
     {
@@ -90,16 +147,16 @@ namespace AdventOfCode.Solutions.Year2019
         }
         public OpCode Code { get; internal set; }
 
-        public int OpCount => InstructionOpCounts.OpCount[(int)Code];
+        public long OpCount => InstructionOpCounts.OpCount[(long)Code];
 
-        public abstract void Execute(IntCode decoder, int parameterMode);
+        public abstract void Execute(IntCode decoder, long parameterMode);
 
-        protected int GetParameter(int mode, int pointer, int[] byteCode)
+        protected long GetParameter(long mode, long pointer, long[] byteCode)
         {
             return mode == 0 ? byteCode[byteCode[pointer]] : byteCode[pointer];
         }
 
-        protected void SetParameter(int mode, int pointer, int[] byteCode, int value)
+        protected void SetParameter(long mode, long pointer, long[] byteCode, long value)
         {
             if (mode == 0)
             {
@@ -118,14 +175,14 @@ namespace AdventOfCode.Solutions.Year2019
         {
         }
 
-        public override void Execute(IntCode decoder, int parameterMode) { }
+        public override void Execute(IntCode decoder, long parameterMode) { }
     }
 
     sealed class invalid : IntCodeInstruction
     {
         public static readonly invalid Instance = new invalid();
         invalid() : base(OpCode.invalid) { }
-        public override void Execute(IntCode decoder, int parameterMode) => throw new Exception();
+        public override void Execute(IntCode decoder, long parameterMode) => throw new Exception();
     }
 
 
@@ -135,16 +192,13 @@ namespace AdventOfCode.Solutions.Year2019
         {
 
         }
-        public override void Execute(IntCode decoder, int parameterMode)
+        public override void Execute(IntCode decoder, long parameterMode)
         {
             ref var state = ref decoder.state;
-            int p1 = parameterMode % 2;
-            int p2 = parameterMode / 10 % 2;
-            int p3 = parameterMode / 100 % 2;
-            int m1 = GetParameter(p1, decoder.InstructionPointer++, state.memory);
-            int m2 = GetParameter(p2, decoder.InstructionPointer++, state.memory);
+            long m1 = decoder.GetParameter(0, parameterMode);
+            long m2 = decoder.GetParameter(1, parameterMode);
 
-            SetParameter(p3, decoder.InstructionPointer++, state.memory, m1 + m2);
+            decoder.SetParameter(2, parameterMode, m1 + m2);
         }
     }
 
@@ -154,16 +208,12 @@ namespace AdventOfCode.Solutions.Year2019
         {
 
         }
-        public override void Execute(IntCode decoder, int parameterMode)
+        public override void Execute(IntCode decoder, long parameterMode)
         {
-            ref var state = ref decoder.state;
-            int p1 = parameterMode % 2;
-            int p2 = parameterMode / 10 % 2;
-            int p3 = parameterMode / 100 % 2;
-            int m1 = GetParameter(p1, decoder.InstructionPointer++, state.memory);
-            int m2 = GetParameter(p2, decoder.InstructionPointer++, state.memory);
+            long m1 = decoder.GetParameter(0, parameterMode);
+            long m2 = decoder.GetParameter(1, parameterMode);
 
-            SetParameter(p3, decoder.InstructionPointer++, state.memory, m1 * m2);
+            decoder.SetParameter(2, parameterMode, m1 * m2);
         }
     }
 
@@ -174,13 +224,13 @@ namespace AdventOfCode.Solutions.Year2019
 
         }
 
-        public override void Execute(IntCode decoder, int parameterMode)
+        public override void Execute(IntCode decoder, long parameterMode)
         {
             ref var state = ref decoder.state;
-            int p1 = parameterMode % 2;
+            long p1 = parameterMode % 2;
 
             if (decoder.askInput) Console.Write("Input: ");
-            SetParameter(p1, decoder.InstructionPointer++, state.memory, decoder.GetInput(state.inputRequest++));
+            decoder.SetParameter(0, parameterMode, decoder.GetInput(state.inputRequest++));
 
             //state.instructionsRun.Add("Store")
         }
@@ -193,11 +243,11 @@ namespace AdventOfCode.Solutions.Year2019
 
         }
 
-        public override void Execute(IntCode decoder, int parameterMode)
+        public override void Execute(IntCode decoder, long parameterMode)
         {
             ref var state = ref decoder.state;
 
-            decoder.RaiseOutput(GetParameter(parameterMode % 2, decoder.InstructionPointer++, state.memory));
+            decoder.RaiseOutput(decoder.GetParameter(0, parameterMode));
         }
     }
 
@@ -208,13 +258,10 @@ namespace AdventOfCode.Solutions.Year2019
 
         }
 
-        public override void Execute(IntCode decoder, int parameterMode)
+        public override void Execute(IntCode decoder, long parameterMode)
         {
-            ref var state = ref decoder.state;
-            int p1 = parameterMode % 2;
-            int p2 = parameterMode / 10 % 2;
-            int m1 = GetParameter(p1, decoder.InstructionPointer++, state.memory);
-            int m2 = GetParameter(p2, decoder.InstructionPointer++, state.memory);
+            long m1 = decoder.GetParameter(0, parameterMode);
+            long m2 = decoder.GetParameter(1, parameterMode);
 
             if (m1 != 0)
                 decoder.InstructionPointer = m2;
@@ -228,13 +275,10 @@ namespace AdventOfCode.Solutions.Year2019
 
         }
 
-        public override void Execute(IntCode decoder, int parameterMode)
+        public override void Execute(IntCode decoder, long parameterMode)
         {
-            ref var state = ref decoder.state;
-            int p1 = parameterMode % 2;
-            int p2 = parameterMode / 10 % 2;
-            int m1 = GetParameter(p1, decoder.InstructionPointer++, state.memory);
-            int m2 = GetParameter(p2, decoder.InstructionPointer++, state.memory);
+            long m1 = decoder.GetParameter(0, parameterMode);
+            long m2 = decoder.GetParameter(1, parameterMode);
 
             if (m1 == 0)
                 decoder.InstructionPointer = m2;
@@ -248,16 +292,12 @@ namespace AdventOfCode.Solutions.Year2019
 
         }
 
-        public override void Execute(IntCode decoder, int parameterMode)
+        public override void Execute(IntCode decoder, long parameterMode)
         {
-            ref var state = ref decoder.state;
-            int p1 = parameterMode % 2;
-            int p2 = parameterMode / 10 % 2;
-            int p3 = parameterMode / 100 % 2;
-            int m1 = GetParameter(p1, decoder.InstructionPointer++, state.memory);
-            int m2 = GetParameter(p2, decoder.InstructionPointer++, state.memory);
+            long m1 = decoder.GetParameter(0, parameterMode);
+            long m2 = decoder.GetParameter(1, parameterMode);
 
-            SetParameter(p3, decoder.InstructionPointer++, state.memory, m1 < m2 ? 1 : 0);
+            decoder.SetParameter(2, parameterMode, m1 < m2 ? 1 : 0);
         }
     }
 
@@ -268,16 +308,29 @@ namespace AdventOfCode.Solutions.Year2019
 
         }
 
-        public override void Execute(IntCode decoder, int parameterMode)
+        public override void Execute(IntCode decoder, long parameterMode)
+        {
+            long m1 = decoder.GetParameter(0, parameterMode);
+            long m2 = decoder.GetParameter(1, parameterMode);
+
+            decoder.SetParameter(2, parameterMode, m1 == m2 ? 1 : 0);
+        }
+    }
+
+    class rel : IntCodeInstruction
+    {
+        public rel() : base(OpCode.rel)
+        {
+
+        }
+
+        public override void Execute(IntCode decoder, long parameterMode)
         {
             ref var state = ref decoder.state;
-            int p1 = parameterMode % 2;
-            int p2 = parameterMode / 10 % 2;
-            int p3 = parameterMode / 100 % 2;
-            int m1 = GetParameter(p1, decoder.InstructionPointer++, state.memory);
-            int m2 = GetParameter(p2, decoder.InstructionPointer++, state.memory);
 
-            SetParameter(p3, decoder.InstructionPointer++, state.memory, m1 == m2 ? 1 : 0);
+            long m1 = decoder.GetParameter(0, parameterMode);
+
+            state.relativeBase += m1;
         }
     }
 
@@ -292,7 +345,15 @@ namespace AdventOfCode.Solutions.Year2019
         jmpfalse,
         slt,
         eq,
+        rel,
         halt = 99,
+    }
+
+    enum ParameterMode
+    {
+        Position,
+        Immediate,
+        Relative,
     }
 
     static class DecoderConstants
@@ -313,7 +374,7 @@ namespace AdventOfCode.Solutions.Year2019
             2,//jmpfalse
             3,//slt
             3,//eq
-            0,//invalid
+            1,//rel
             0,//invalid
             0,//invalid
             0,//invalid
@@ -426,7 +487,7 @@ namespace AdventOfCode.Solutions.Year2019
                 new jmpfalse(),
                 new slt(),
                 new eq(),
-                invalid,
+                new rel(),
                 invalid,
                 invalid,
                 invalid,

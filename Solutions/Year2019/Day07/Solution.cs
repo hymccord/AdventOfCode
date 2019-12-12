@@ -30,17 +30,16 @@ namespace AdventOfCode.Solutions.Year2019
             IntCode cpu = IntCode.Create(s);
 
             int runningAmp = 0;
-            int input = 0;
-            int output = 0;
+            long input = 0;
+            long output = 0;
 
-            int maxOutput = int.MinValue;
+            long maxOutput = long.MinValue;
             cpu.GetInput += (i) =>
             {
                 return i switch
                 {
                     0 => curPhase[runningAmp],
-                    1 => input,
-                    _ => throw new System.Exception(),
+                    _ => input,
                 };
                 //System.Console.WriteLine($"Getting input {curPhase[runningAmp]}.");
                 //return curPhase[runningAmp];
@@ -91,10 +90,10 @@ namespace AdventOfCode.Solutions.Year2019
                 new AutoResetEvent(false),
             };
 
-            int input = 0;
-            int output = 0;
+            long input = 0;
+            long output = 0;
 
-            int maxOutput = int.MinValue;
+            long maxOutput = int.MinValue;
 
             for (int i = 0; i < 5; i++)
             {
@@ -105,9 +104,9 @@ namespace AdventOfCode.Solutions.Year2019
                     // ask for input from previous Amp
                     if (j > 0)
                     {
-                        System.Console.WriteLine($"Amp {(char)('A' + local)} waiting for input");
+                        //System.Console.WriteLine($"Amp {(char)('A' + local)} waiting for input");
                         events[GetPreviousIndex(local)].WaitOne();
-                        System.Console.WriteLine($"Amp {(char)('A' + local)} got {input}");
+                        //System.Console.WriteLine($"Amp {(char)('A' + local)} got {input}");
                     }
 
                     return j switch

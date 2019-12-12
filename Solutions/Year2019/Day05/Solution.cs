@@ -10,7 +10,7 @@ namespace AdventOfCode.Solutions.Year2019 {
         }
 
         protected override string SolvePartOne() {
-            var output = new List<int>();
+            var output = new List<long>();
             string s = Input.Trim('\n');
             IntCode cpu = IntCode.Create(s);
             cpu.GetInput += (i) => 1;
@@ -24,7 +24,7 @@ namespace AdventOfCode.Solutions.Year2019 {
         }
 
         protected override string SolvePartTwo() {
-            var output = new List<int>();
+            var output = new List<long>();
             string s = Input.Trim('\n');
             IntCode cpu = IntCode.Create(s);
             cpu.GetInput += (i) => 5;
