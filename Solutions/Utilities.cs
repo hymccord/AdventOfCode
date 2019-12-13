@@ -64,5 +64,38 @@ namespace AdventOfCode.Solutions {
                 .SelectMany(t => source.Where(e => !t.Contains(e)),
                 (t1, t2) => t1.Concat(new T[] { t2 }));
         }
+
+        private static long GCD(long a, long b)
+        {
+            while (b > 0)
+            {
+                long temp = b;
+                b = a % b;
+                a = temp;
+            }
+
+            return a;
+        }
+
+        public static long GCD(this long[] input)
+        {
+            long result = input[0];
+            for (int i = 1; i < input.Length; i++)
+            {
+                result = LCM(result, input[i]);
+            }
+
+            return result;
+        }
+
+        public static long LCM(long a, long b)
+        {
+            return a * b / GCD(a, b);
+        }
+
+        public static long LCM(this IEnumerable<long> input)
+        {
+            return input.Aggregate(1L, LCM);
+        }
     }
 }

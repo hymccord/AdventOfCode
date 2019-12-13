@@ -155,6 +155,12 @@ namespace AdventOfCode.Solutions {
                 return new Point(-a.X, -a.Y);
             }
 
+
+            public override string ToString()
+            {
+                return $"{X}, {Y}";
+            }
+
             public static IEnumerable<Point> Cardinal
             {
                 get
@@ -274,6 +280,31 @@ namespace AdventOfCode.Solutions {
                 }
                 bool b = WriteConsoleOutput(h, buf,
                     new Coord() { X = (short)cols, Y = (short)rows },
+                    new Coord() { X = 0, Y = 0 },
+                    ref rect);
+            }
+        }
+
+        protected void WriteConsole(int row, int col, short left, short top, char c, ConsoleColor color = ConsoleColor.White)
+        {
+            SafeFileHandle h = CreateFile("CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
+
+            if (!h.IsInvalid)
+            {
+                CharInfo[] buf = new CharInfo[1];
+                buf[0].Attributes = (short)color;
+                buf[0].Char.AsciiChar = (byte)c;
+
+                var rect = new SmallRect
+                {
+                    Left = (short)(left + col),
+                    Top = (short)(top + row),
+                    Right = (short)(col + left),
+                    Bottom = (short)(row + top)
+                };
+
+                bool b = WriteConsoleOutput(h, buf,
+                    new Coord() { X = 1, Y = 1 },
                     new Coord() { X = 0, Y = 0 },
                     ref rect);
             }
