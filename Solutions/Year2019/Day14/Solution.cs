@@ -29,37 +29,21 @@ namespace AdventOfCode.Solutions.Year2019 {
 
             var minFuel = ProcessChemical("", new ChemicalInput("FUEL", 1), new Dictionary<string, long>());
 
-            long trillion = 1_000_000_000_000;
-            
-            long Search(long n, long T)
+            long fuel = 1;
+            long target = (long)1E12;
+
+            while (true)
             {
-                long left = 0;
-                long right = n - 1;
-                while (left <= right)
+                var ore = OreForFuel(fuel + 1);
+                if (ore > target)
                 {
-                    var m = (left + right) / 2;
-                    var ore = ProcessChemical("", new ChemicalInput("FUEL", m), new Dictionary<string, long>());
-                    //Console.WriteLine($"{m:N0} fuel needs {ore:N0} ore.");
-
-                    var diff = trillion - ore;
-                    if (diff > 0 && diff < T)
-                        return m;
-
-                    if (trillion - ore > 0)
-                    {
-                        left = m + 1;
-                    }
-                    else if (trillion - ore < 0)
-                    {
-                        right = m - 1;
-                    }
+                    return fuel.ToString();
                 }
-                throw new Exception();
+                else
+                {
+                    fuel = Math.Max(fuel + 1, (fuel + 1) * target / ore);
+                }
             }
-
-            return Search(trillion, minFuel).ToString();
-
-            return null; 
         }
 
         private void BuildReactionDict()
@@ -79,6 +63,13 @@ namespace AdventOfCode.Solutions.Year2019 {
 
                 _outputToInputs[outputs[1]] = inputs;
             }
+        }
+
+        private long OreForFuel(long fuel)
+        {
+            var ore = ProcessChemical("", new ChemicalInput("FUEL", fuel), new Dictionary<string, long>());
+            Console.WriteLine($"{fuel:N0} fuel needs {ore:N0} ore.");
+            return ore;
         }
 
         private long ProcessChemical(string space, ChemicalInput reactionOutput, Dictionary<string, long> surplus)
