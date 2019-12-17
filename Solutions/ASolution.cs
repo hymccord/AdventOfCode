@@ -27,6 +27,7 @@ namespace AdventOfCode.Solutions {
         public string Input => string.IsNullOrEmpty(_input.Value) ? null : _input.Value; 
         public string Part1 => string.IsNullOrEmpty(_part1.Value) ? "" : _part1.Value;
         public string Part2 => string.IsNullOrEmpty(_part2.Value) ? "" : _part2.Value;
+        protected bool DebugOutput { get; set; } = true;
 
         private protected ASolution(int day, int year, string title = "") {
             Day = day;
@@ -95,6 +96,14 @@ namespace AdventOfCode.Solutions {
 
         protected abstract string SolvePartOne();
         protected abstract string SolvePartTwo();
+
+        protected void WriteOutput(string output)
+        {
+            if (this.DebugOutput)
+            {
+                Console.WriteLine(output);
+            }
+        }
 
         [DebuggerStepThrough]
         [DebuggerDisplay("{X}, {Y}")]
