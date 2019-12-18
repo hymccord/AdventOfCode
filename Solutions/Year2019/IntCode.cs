@@ -14,7 +14,7 @@ namespace AdventOfCode.Solutions.Year2019
         public event EventHandler<long> Output;
 
         long[] program;
-        readonly IntCodeInstruction[] _opCodeHandlers;
+        static readonly IntCodeInstruction[] _opCodeHandlers;
 
         internal State state;
         internal bool askInput = false;
@@ -33,11 +33,13 @@ namespace AdventOfCode.Solutions.Year2019
         static IntCode()
         {
             _ = InstructionOpCounts.OpCount;
+            _opCodeHandlers = OpCodeHandlersTable.Handlers;
         }
+
+        private IntCode() { }
 
         IntCode(string input)
         {
-            _opCodeHandlers = OpCodeHandlersTable.Handlers;
             program = input.Split(',').Select(long.Parse).ToArray();
             state.memory = program.Select((v, i) => new { v, i }).ToDictionary(a => (long)a.i, a => a.v);
         }
@@ -45,6 +47,19 @@ namespace AdventOfCode.Solutions.Year2019
         public static IntCode Create(string input)
         {
             return new IntCode(input);
+        }
+
+        public IntCode Clone()
+        {
+            var clone = new IntCode();
+            clone.program = new long[program.Length];
+            program.CopyTo(clone.program, 0);
+            clone.InstructionPointer = InstructionPointer;
+            clone.state.inputRequest = 0;
+            clone.state.relativeBase = this.state.relativeBase;
+            clone.state.memory = new Dictionary<long, long>(state.memory);
+
+            return clone;
         }
 
         public void Reset()
@@ -80,7 +95,8 @@ namespace AdventOfCode.Solutions.Year2019
             return state.memory[InstructionPointer++];
         }
 
-        internal void RaiseOutput(long s) => Output?.Invoke(this, s);
+        internal void RaiseOutput(long s) => 
+            Output?.Invoke(this, s);
 
         internal long GetParameter(long parameterIndex, long opCode)
         {

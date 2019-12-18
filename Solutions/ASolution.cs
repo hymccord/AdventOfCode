@@ -8,7 +8,8 @@ using System.Net;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
-namespace AdventOfCode.Solutions {
+namespace AdventOfCode.Solutions
+{
 
     interface ISolution
     {
@@ -20,78 +21,101 @@ namespace AdventOfCode.Solutions {
     {
 
         Lazy<string> _input, _part1, _part2;
-        
+
         public int Day { get; }
         public int Year { get; }
         public string Title { get; }
-        public string Input => string.IsNullOrEmpty(_input.Value) ? null : _input.Value; 
+        public string Input => string.IsNullOrEmpty(_input.Value) ? null : _input.Value;
         public string Part1 => string.IsNullOrEmpty(_part1.Value) ? "" : _part1.Value;
         public string Part2 => string.IsNullOrEmpty(_part2.Value) ? "" : _part2.Value;
         protected bool DebugOutput { get; set; } = true;
 
-        private protected ASolution(int day, int year, string title = "") {
+        private protected ASolution(int day, int year, string title = "")
+        {
             Day = day;
-            Year = year; 
+            Year = year;
             Title = title;
             _input = new Lazy<string>(() => LoadInput());
             _part1 = new Lazy<string>(() => SolvePartOne());
             _part2 = new Lazy<string>(() => SolvePartTwo());
         }
 
-        public void Solve(int part = 0) {
-            if(Input == null) return; 
+        public void Solve(int part = 0)
+        {
+            if (Input == null) return;
 
-            bool doOutput = false; 
+            bool doOutput = false;
             string output = $"--- Day {Day}: {Title} --- \n";
 
-            if(part != 2) {
-                if(Part1 != "") {
-                    output += $"Part 1: {Part1}\n"; 
-                    doOutput= true; 
-                } else {
-                    output += "Part 1: Unsolved\n"; 
-                    if(part == 1) doOutput= true; 
+            if (part != 2)
+            {
+                if (Part1 != "")
+                {
+                    output += $"Part 1: {Part1}\n";
+                    doOutput = true;
+                }
+                else
+                {
+                    output += "Part 1: Unsolved\n";
+                    if (part == 1) doOutput = true;
                 }
             }
-            if(part != 1) {
-                if(Part2 != "") {
+            if (part != 1)
+            {
+                if (Part2 != "")
+                {
                     output += $"Part 2: {Part2}\n";
-                    doOutput= true; 
-                } else {
+                    doOutput = true;
+                }
+                else
+                {
                     output += "Part 2: Unsolved\n";
-                    if(part == 2) doOutput= true; 
+                    if (part == 2) doOutput = true;
                 }
             }
 
-            if(doOutput) Console.WriteLine(output); 
+            if (doOutput) Console.WriteLine(output);
         }
 
-        string LoadInput() {
+        string LoadInput()
+        {
             string INPUT_FILEPATH = $"Solutions/Year{Year}/Day{Day.ToString("D2")}/input";
             string INPUT_URL = $"https://adventofcode.com/{Year}/day/{Day}/input";
-            string input = ""; 
+            string input = "";
 
-            if(File.Exists(INPUT_FILEPATH)) {
+            if (File.Exists(INPUT_FILEPATH))
+            {
                 input = File.ReadAllText(INPUT_FILEPATH);
-            } else {
-                try {
-                    using(var client = new WebClient()) {
+            }
+            else
+            {
+                try
+                {
+                    using (var client = new WebClient())
+                    {
                         client.Headers.Add(HttpRequestHeader.Cookie, Program.Config.Cookie);
                         input = client.DownloadString(INPUT_URL).Trim();
                         File.WriteAllText(INPUT_FILEPATH, input);
                     }
-                } catch(WebException e) {
-                    var statusCode = ((HttpWebResponse) e.Response).StatusCode;
-                    if(statusCode == HttpStatusCode.BadRequest) {
+                }
+                catch (WebException e)
+                {
+                    var statusCode = ((HttpWebResponse)e.Response).StatusCode;
+                    if (statusCode == HttpStatusCode.BadRequest)
+                    {
                         Console.WriteLine($"Day {Day}: Error code 400 when attempting to retrieve puzzle input through the web client. Your session cookie is probably not recognized.");
-                    } else if(statusCode == HttpStatusCode.NotFound) {
+                    }
+                    else if (statusCode == HttpStatusCode.NotFound)
+                    {
                         Console.WriteLine($"Day {Day}: Error code 404 when attempting to retrieve puzzle input through the web client. The puzzle is probably not available yet.");
-                    } else {
+                    }
+                    else
+                    {
                         Console.WriteLine(e.Status);
                     }
                 }
             }
-            return input; 
+            return input;
         }
 
         protected abstract string SolvePartOne();
@@ -164,6 +188,8 @@ namespace AdventOfCode.Solutions {
                 return new Point(-a.X, -a.Y);
             }
 
+            public void Deconstruct(out int x, out int y) =>
+                (x, y) = (X, Y);
 
             public override string ToString()
             {
@@ -390,6 +416,96 @@ namespace AdventOfCode.Solutions {
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        internal class AStar<T>
+        {
+            private readonly WeightedGrid<T> _grid;
+
+            public AStar(WeightedGrid<T> grid)
+            {
+                _grid = grid;
+            }
+
+            public virtual List<Point> ReconstructPath(Dictionary<Point, Point> cameFrom, Point current)
+            {
+                var totalPath = new List<Point> { current };
+                while (cameFrom.ContainsKey(current))
+                {
+                    current = cameFrom[current];
+                    totalPath.Insert(0, current);
+                }
+
+                return totalPath;
+            }
+
+            public List<Point> A_Star(Point start, Point goal, Func<Point, Point, int> h)
+            {
+                SortedList<double, Point> frontier = new SortedList<double, Point>(new DuplicateKeyComparer<double>());
+                HashSet<Point> visited = new HashSet<Point>();
+                Dictionary<Point, double> costSoFar = new Dictionary<Point, double>() { { start, 0 } };
+                Dictionary<Point, Point> cameFrom = new Dictionary<Point, Point>();
+                frontier.Add(0, start);
+
+                while (!(frontier.Count == 0))
+                {
+                    Point current = frontier.Values[0];
+
+                    if (current == goal)
+                        return ReconstructPath(cameFrom, current);
+
+                    frontier.RemoveAt(0);
+                    visited.Add(current);
+
+                    foreach (Point next in current.Neighbors)
+                    {
+                        if (next.X < 0 || next.Y < 0 || next.X >= _grid.Width || next.Y >= _grid.Height)
+                            continue;
+                        var newCost = costSoFar[current] + _grid.Cost(current, next);
+                        if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
+                        {
+                            _grid.EnterLoc(current, next);
+                            costSoFar[next] = newCost;
+                            double priority = newCost + h(goal, next);
+                            frontier.Add(priority, next);
+                            cameFrom[next] = current;
+                        }
+                    }
+                }
+
+                return null;
+            }
+
+            private class DuplicateKeyComparer<TKey>
+                : IComparer<TKey> where TKey : IComparable
+            {
+                public int Compare(TKey x, TKey y)
+                {
+                    int result = x.CompareTo(y);
+                    if (result == 0)
+                        return 1;
+
+                    return result;
+                }
+            }
+        }
+
+        internal abstract class WeightedGrid<T>
+        {
+            protected readonly T[,] _grid;
+
+            public WeightedGrid(T[,] grid)
+            {
+                _grid = grid;
+                Height = _grid.GetLength(0);
+                Width = _grid.GetLength(1);
+            }
+
+            public int Width { get; }
+            public int Height { get; }
+
+            internal abstract double Cost(Point from, Point to);
+            internal virtual void EnterLoc(Point from, Point to) { }
         }
     }
 }
