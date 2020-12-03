@@ -1,51 +1,53 @@
 using System.Collections.Generic;
 using System.Linq;
-using AdventOfCode.Solutions;
 
-class Solution : ASolution
+namespace AdventOfCode.Solutions.Year2020
 {
-    private HashSet<int> _numSet;
-    private List<int> _numList;
-
-    public Solution() :
-        base(1, 2020, "Report Repair")
+    class Day01 : ASolution
     {
-        _numSet = Input.SplitByNewline().Select(int.Parse).ToHashSet();
-        _numList = _numSet.ToList();
-    }
+        private HashSet<int> _numSet;
+        private List<int> _numList;
 
-    protected override string SolvePartOne()
-    {
-        foreach (var num in _numSet)
+        public Day01() :
+            base(1, 2020, "Report Repair")
         {
-            if (_numSet.Contains(2020 - num))
-                return (num * (2020 - num)).ToString();
+            _numSet = Input.SplitByNewline().Select(int.Parse).ToHashSet();
+            _numList = _numSet.ToList();
         }
 
-        throw new KeyNotFoundException();
-    }
-
-    protected override string SolvePartTwo()
-    {
-        Dictionary<int, (int, int)> pairs = new(); 
-        for (int i = 0; i < _numList.Count - 1; i++)
+        protected override string SolvePartOne()
         {
-            for (int j = i + 1; j < _numList.Count; j++)
+            foreach (var num in _numSet)
             {
-                int one = _numList[i];
-                int two = _numList[j];
-                pairs[one + two] = (one, two);
+                if (_numSet.Contains(2020 - num))
+                    return (num * (2020 - num)).ToString();
             }
+
+            throw new KeyNotFoundException();
         }
 
-        foreach (var num in _numSet)
+        protected override string SolvePartTwo()
         {
-            if (pairs.ContainsKey(2020 - num))
+            Dictionary<int, (int, int)> pairs = new();
+            for (int i = 0; i < _numList.Count - 1; i++)
             {
-                (int x, int y) = pairs[2020 - num];
-                return (num * x * y).ToString();
+                for (int j = i + 1; j < _numList.Count; j++)
+                {
+                    int one = _numList[i];
+                    int two = _numList[j];
+                    pairs[one + two] = (one, two);
+                }
             }
+
+            foreach (var num in _numSet)
+            {
+                if (pairs.ContainsKey(2020 - num))
+                {
+                    (int x, int y) = pairs[2020 - num];
+                    return (num * x * y).ToString();
+                }
+            }
+            throw new KeyNotFoundException();
         }
-        throw new KeyNotFoundException();
     }
 }
