@@ -20,7 +20,7 @@ namespace AdventOfCode.Solutions.Year2019 {
         public Day10() : base(10, 2019, "") {
         }
 
-        protected override string SolvePartOne() {
+        protected override object SolvePartOne() {
             ParseAsteroids(Input);
             _thePoint = _asteroids.Select(FigureLineOfSight).OrderByDescending(t => t.count).First();
 
@@ -38,7 +38,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             return (point, i);
         }
 
-        protected override string SolvePartTwo() {
+        protected override object SolvePartTwo() {
             Point station = _thePoint.location;
             var a = _asteroids.Except(new Point[] { station })
                 .Select(p => new AsteroidDistance(station, p))

@@ -12,7 +12,7 @@ namespace AdventOfCode.Solutions.Year2019 {
         }
 
 
-        protected override string SolvePartOne() {
+        protected override object SolvePartOne() {
             var panels = new Dictionary<Point, long>();
             (Point location, Point direction) = (new Point(), Point.North);
             IntCode cpu = IntCode.Create(Input.SplitByNewline().First());
@@ -43,7 +43,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             return panels.Count.ToString(); 
         }
 
-        protected override string SolvePartTwo() {
+        protected override object SolvePartTwo() {
             var panels = new Dictionary<Point, long>
             {
                 { new Point(), 1 },

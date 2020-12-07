@@ -11,7 +11,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             
         }
 
-        protected override string SolvePartOne() {
+        protected override object SolvePartOne() {
             IntCode cpu = IntCode.Create(Input.SplitByNewline().First());           
             int i = 0;
             int blocks = 0;
@@ -36,7 +36,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             e.ToString().ToCharArray();
         }
 
-        protected override string SolvePartTwo() {
+        protected override object SolvePartTwo() {
             IntCode cpu = IntCode.Create(Input.SplitByNewline().First());
             cpu.ByteCode[0] = 2;
             var output = new List<long>();

@@ -23,14 +23,14 @@ namespace AdventOfCode.Solutions.Year2020.Day05
                 .ToList();
         }
 
-        protected override string SolvePartOne()
+        protected override object SolvePartOne()
         {
             _ids = _passes.Select(p => p.Item1 * 8 + p.Item2).ToHashSet();
             _max = _ids.Max();
             return _max.ToString();
         }
 
-        protected override string SolvePartTwo()
+        protected override object SolvePartTwo()
         {
             return Enumerable.Range(0, _max + 1).ToHashSet()
                 .First(i => _ids.Contains(i - 1) && !_ids.Contains(i) && _ids.Contains(i + 1)).ToString();

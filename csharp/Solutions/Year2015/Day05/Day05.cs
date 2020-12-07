@@ -11,7 +11,7 @@ namespace AdventOfCode.Solutions.Year2015.Day05
         {
         }
 
-        protected override string SolvePartOne()
+        protected override object SolvePartOne()
         {
             int c = 0;
             foreach (var s in Input.SplitByNewline())
@@ -32,7 +32,7 @@ uurcxstgmygtbstg
 ieodomkazucvgmuy
 ";
 
-        protected override string SolvePartTwo()
+        protected override object SolvePartTwo()
         {
             int c = 0;
             foreach (var s in Input.SplitByNewline())

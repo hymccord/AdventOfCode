@@ -12,7 +12,7 @@ namespace AdventOfCode.Solutions.Year2015
 
         }
 
-        protected override string SolvePartOne()
+        protected override object SolvePartOne()
         {
             HashSet<Point> _points = new HashSet<Point>();
             Point current = new Point();
@@ -34,7 +34,7 @@ namespace AdventOfCode.Solutions.Year2015
             return _points.Count.ToString();
         }
 
-        protected override string SolvePartTwo()
+        protected override object SolvePartTwo()
         {
             HashSet<Point> _points = new HashSet<Point>();
             Point santa = new Point();

@@ -19,7 +19,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             
         }
 
-        protected override string SolvePartOne() {
+        protected override object SolvePartOne() {
             _data = Input.SplitByNewline().First().ToCharArray().Select(f => (byte)(f - '0')).ToArray();
             _numLayers = _data.Length / (Rows * Cols);
             _layerLen = _data.Length / _numLayers;
@@ -45,7 +45,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             return (numOnes * numTwos).ToString(); 
         }
 
-        protected override string SolvePartTwo() {
+        protected override object SolvePartTwo() {
             _image = new byte[Rows, Cols];
             for (int row = 0; row < Rows; row++)
             {

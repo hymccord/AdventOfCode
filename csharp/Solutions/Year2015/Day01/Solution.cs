@@ -10,7 +10,7 @@ namespace AdventOfCode.Solutions.Year2015
         {
         }
 
-        protected override string SolvePartOne()
+        protected override object SolvePartOne()
         {
             var floor = 0;
             foreach (char c in Input)
@@ -24,7 +24,7 @@ namespace AdventOfCode.Solutions.Year2015
             return floor.ToString();
         }
 
-        protected override string SolvePartTwo()
+        protected override object SolvePartTwo()
         {
             var floor = 0;
             for (int i = 0; i < Input.Length; i++)

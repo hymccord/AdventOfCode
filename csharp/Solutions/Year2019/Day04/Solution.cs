@@ -13,7 +13,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             high = input[1];
         }
 
-        protected override string SolvePartOne() {
+        protected override object SolvePartOne() {
             int valid = 0;
             for (int i = low; i <= high; i++)
             {
@@ -42,7 +42,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             return valid.ToString();
         }
 
-        protected override string SolvePartTwo() {
+        protected override object SolvePartTwo() {
             int valid = 0;
             for (int i = low; i <= high; i++)
             {

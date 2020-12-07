@@ -28,13 +28,13 @@ namespace AdventOfCode.Solutions.Year2020.Day04
             }).ToList();
         }
 
-        protected override string SolvePartOne()
+        protected override object SolvePartOne()
         {
             // Valid passports have 7 required fields, not cid
             return _passports.Count(p => p.Keys.Count == 7).ToString();
         }
 
-        protected override string SolvePartTwo()
+        protected override object SolvePartTwo()
         {
             int count = 0;
 

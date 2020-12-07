@@ -18,7 +18,7 @@ namespace AdventOfCode.Solutions.Year2020
             }).ToList();
         }
 
-        protected override string SolvePartOne()
+        protected override object SolvePartOne()
         {
             return _lines.Count(l =>
             {
@@ -27,7 +27,7 @@ namespace AdventOfCode.Solutions.Year2020
             }).ToString();
         }
 
-        protected override string SolvePartTwo()
+        protected override object SolvePartTwo()
         {
             return _lines.Count(l =>
             {

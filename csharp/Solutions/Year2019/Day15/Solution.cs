@@ -18,7 +18,7 @@ namespace AdventOfCode.Solutions.Year2019 {
         }
 
         Queue<(Point,IntCode)> Q = new Queue<(Point,IntCode)>();
-        protected override string SolvePartOne() 
+        protected override object SolvePartOne() 
         {
             processed.Add(new Point());
             stepsToPoint[new Point()] = 0;
@@ -96,7 +96,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             return ret;
         }
 
-        protected override string SolvePartTwo() {
+        protected override object SolvePartTwo() {
             int minX = grid.Min(kvp => kvp.Key.X);
             int minY = grid.Min(kvp => kvp.Key.Y);
             int maxX = grid.Max(kvp => kvp.Key.X);

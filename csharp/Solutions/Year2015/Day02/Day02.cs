@@ -12,7 +12,7 @@ namespace AdventOfCode.Solutions.Year2015
 
         }
 
-        protected override string SolvePartOne()
+        protected override object SolvePartOne()
         {
             var total = 0;
             foreach (string line in Input.SplitByNewline())
@@ -27,7 +27,7 @@ namespace AdventOfCode.Solutions.Year2015
             return total.ToString();
         }
 
-        protected override string SolvePartTwo()
+        protected override object SolvePartTwo()
         {
             var total = 0;
             foreach (string line in Input.SplitByNewline())

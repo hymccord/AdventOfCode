@@ -19,7 +19,7 @@ namespace AdventOfCode.Solutions.Year2015
             s = Input.SplitByNewline().First();
         }
 
-        protected override string SolvePartOne()
+        protected override object SolvePartOne()
         {
             long seed = 0;
             var s = Stopwatch.StartNew();
@@ -40,7 +40,7 @@ namespace AdventOfCode.Solutions.Year2015
             return seed.ToString();
         }
 
-        protected override string SolvePartTwo()
+        protected override object SolvePartTwo()
         {
             long seed = 0;
             var s = Stopwatch.StartNew();

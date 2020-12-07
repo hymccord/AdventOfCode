@@ -15,7 +15,7 @@ namespace AdventOfCode.Solutions.Year2020.Day06
 
         }
 
-        protected override string SolvePartOne()
+        protected override object SolvePartOne()
         {
             // double newline = new group
             return Input.SplitByBlankLine()
@@ -28,7 +28,7 @@ namespace AdventOfCode.Solutions.Year2020.Day06
                 }).ToString();
         }
 
-        protected override string SolvePartTwo()
+        protected override object SolvePartTwo()
         {
             return Input.SplitByBlankLine()
                 .Aggregate(0, (i, s) =>

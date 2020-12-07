@@ -19,7 +19,7 @@ namespace AdventOfCode.Solutions.Year2019 {
 
         int[] patten = new int[] { 0, 1, 0, -1 };
         int pattenLength = 4;
-        protected override string SolvePartOne() {
+        protected override object SolvePartOne() {
             var arr = Input.SplitByNewline().First().ToCharArray().Select(c => (int)char.GetNumericValue(c)).ToArray();
             int[] nextRound = new int[arr.Length];
 
@@ -43,7 +43,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             return arr.Take(8).JoinAsStrings(); 
         }
 
-        protected override string SolvePartTwo() {
+        protected override object SolvePartTwo() {
             var arr2 = Input.SplitByNewline().First().ToCharArray().Select(c => (int)char.GetNumericValue(c)).ToArray();
             var bigArr = Enumerable.Repeat(arr2, 10000).SelectMany(c => c).ToArray();
             int offset = int.Parse(arr2.Take(7).JoinAsStrings());

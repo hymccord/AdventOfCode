@@ -40,7 +40,7 @@ I)SAN";
             
         }
 
-        protected override string SolvePartOne() {
+        protected override object SolvePartOne() {
             _tree = BuildTree(Input);
             _com = _tree["COM"];
 
@@ -63,7 +63,7 @@ I)SAN";
             return count.ToString(); 
         }
 
-        protected override string SolvePartTwo() {
+        protected override object SolvePartTwo() {
             var you = _tree["YOU"];
             var san = _tree["SAN"];
 

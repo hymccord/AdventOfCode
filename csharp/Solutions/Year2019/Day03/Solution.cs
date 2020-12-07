@@ -25,7 +25,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             _points = new Dictionary<Point, int>();
         }
 
-        protected override string SolvePartOne() {
+        protected override object SolvePartOne() {
             int steps = 0;
             var origin = new Point(0, 0);
 
@@ -102,7 +102,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             return _minHatten.ToString();
         }
 
-        protected override string SolvePartTwo() {
+        protected override object SolvePartTwo() {
             return _minSteps.ToString();
         }
 

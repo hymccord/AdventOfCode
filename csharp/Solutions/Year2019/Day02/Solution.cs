@@ -13,7 +13,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             //intInputs = test;
         }
 
-        protected override string SolvePartOne() {
+        protected override object SolvePartOne() {
             IntCode cpu = IntCode.Create(Input.Trim('\n'));
             cpu.ByteCode[1] = 12;
             cpu.ByteCode[2] = 2;
@@ -22,7 +22,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             return cpu.ByteCode[0].ToString();
         }
 
-        protected override string SolvePartTwo() {
+        protected override object SolvePartTwo() {
             IntCode cpu = IntCode.Create(Input.Trim('\n'));
 
             for (int i = 0; i < 100; i++)

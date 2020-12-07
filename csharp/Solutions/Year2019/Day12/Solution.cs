@@ -21,7 +21,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             
         }
 
-        protected override string SolvePartOne() {
+        protected override object SolvePartOne() {
             ParseInput();
 
             for (int i = 0; i < 1000; i++)
@@ -33,7 +33,7 @@ namespace AdventOfCode.Solutions.Year2019 {
         }
 
         private int currentSim = 0;
-        protected override string SolvePartTwo() {
+        protected override object SolvePartTwo() {
             ParseInput();
 
             var xs = new HashSet<int>();

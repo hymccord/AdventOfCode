@@ -9,7 +9,7 @@ namespace AdventOfCode.Solutions.Year2019 {
         string test2 = "1102,34915192,34915192,7,4,7,99,0";
         string test3 = "104,1125899906842624,99";
 
-        protected override string SolvePartOne() {
+        protected override object SolvePartOne() {
             string output = null; ;
             var cpu = IntCode.Create(Input);
             cpu.GetInput = (i) => 1;
@@ -22,7 +22,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             return output;
         }
 
-        protected override string SolvePartTwo() {
+        protected override object SolvePartTwo() {
             string output = null; ;
             var cpu = IntCode.Create(Input);
             cpu.GetInput = (i) => 2;

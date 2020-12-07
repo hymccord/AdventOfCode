@@ -9,11 +9,11 @@ namespace AdventOfCode.Solutions.Year2019 {
             
         }
 
-        protected override string SolvePartOne() {
+        protected override object SolvePartOne() {
             return Input.SplitByNewline().Select(int.Parse).Select(i => i / 3 - 2).Sum().ToString();
         }
 
-        protected override string SolvePartTwo() {
+        protected override object SolvePartTwo() {
             int sum = 0;
             Stack<int> q = new Stack<int>(Input.SplitByNewline().Select(int.Parse));
 

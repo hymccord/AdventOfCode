@@ -20,14 +20,15 @@ namespace AdventOfCode.Solutions
     abstract class ASolution : ISolution
     {
 
-        Lazy<string> _input, _part1, _part2;
+        Lazy<string> _input;
+        Lazy<object> _part1, _part2;
 
         public int Day { get; }
         public int Year { get; }
         public string Title { get; }
         public string Input => string.IsNullOrEmpty(_input.Value) ? null : _input.Value;
-        public string Part1 => string.IsNullOrEmpty(_part1.Value) ? "" : _part1.Value;
-        public string Part2 => string.IsNullOrEmpty(_part2.Value) ? "" : _part2.Value;
+        public string Part1 => string.IsNullOrEmpty($"{_part1.Value}") ? "" : $"{_part1.Value}";
+        public string Part2 => string.IsNullOrEmpty($"{_part2.Value}") ? "" : $"{_part2.Value}";
         protected bool DebugOutput { get; set; } = true;
 
         private protected ASolution(int day, int year, string title = "")
@@ -36,8 +37,8 @@ namespace AdventOfCode.Solutions
             Year = year;
             Title = title;
             _input = new Lazy<string>(() => LoadInput());
-            _part1 = new Lazy<string>(() => SolvePartOne());
-            _part2 = new Lazy<string>(() => SolvePartTwo());
+            _part1 = new Lazy<object>(() => SolvePartOne());
+            _part2 = new Lazy<object>(() => SolvePartTwo());
         }
 
         public void Solve(int part = 0)
@@ -118,8 +119,8 @@ namespace AdventOfCode.Solutions
             return input;
         }
 
-        protected abstract string SolvePartOne();
-        protected abstract string SolvePartTwo();
+        protected abstract object SolvePartOne();
+        protected abstract object SolvePartTwo();
 
         protected void WriteOutput(string output)
         {

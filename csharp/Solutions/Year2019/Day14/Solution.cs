@@ -15,7 +15,7 @@ namespace AdventOfCode.Solutions.Year2019 {
                 
         }
 
-        protected override string SolvePartOne() {
+        protected override object SolvePartOne() {
             BuildReactionDict();
 
             this.DebugOutput = false;
@@ -24,7 +24,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             return oreNeeded.ToString(); 
         }
 
-        protected override string SolvePartTwo() {
+        protected override object SolvePartTwo() {
             this.DebugOutput = false;
 
             var minFuel = ProcessChemical("", new ChemicalInput("FUEL", 1), new Dictionary<string, long>());

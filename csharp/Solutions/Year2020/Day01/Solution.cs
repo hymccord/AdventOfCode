@@ -15,7 +15,7 @@ namespace AdventOfCode.Solutions.Year2020
             _numList = _numSet.ToList();
         }
 
-        protected override string SolvePartOne()
+        protected override object SolvePartOne()
         {
             foreach (var num in _numSet)
             {
@@ -26,7 +26,7 @@ namespace AdventOfCode.Solutions.Year2020
             throw new KeyNotFoundException();
         }
 
-        protected override string SolvePartTwo()
+        protected override object SolvePartTwo()
         {
             Dictionary<int, (int, int)> pairs = new();
             for (int i = 0; i < _numList.Count - 1; i++)

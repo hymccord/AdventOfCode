@@ -25,7 +25,7 @@ dark violet bags contain no other bags.";
         {
         }
 
-        protected override string SolvePartOne()
+        protected override object SolvePartOne()
         {
 
             foreach (var line in Input.SplitByNewline())
@@ -53,7 +53,7 @@ dark violet bags contain no other bags.";
             return (processed.Count - 1).ToString();
         }
 
-        protected override string SolvePartTwo()
+        protected override object SolvePartTwo()
         {
             long Process(long i, string color)
             {

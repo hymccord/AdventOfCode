@@ -35,12 +35,12 @@ namespace AdventOfCode.Solutions.Year2020
             height = trees.Length;
         }
 
-        protected override string SolvePartOne()
+        protected override object SolvePartOne()
         {
             return Toboggan(new Point(3, 1)).ToString();
         }
 
-        protected override string SolvePartTwo()
+        protected override object SolvePartTwo()
         {
             WriteConsole(height, width, 0, 0, (row, col) =>
             {

@@ -21,7 +21,7 @@ toggle 0,0 through 999,0
 turn off 499,499 through 500,500
 ";
 
-        protected override string SolvePartOne()
+        protected override object SolvePartOne()
         {
             int[] grid = new int[1_000_000];
             instructions = BuildInstruction(Input.SplitByNewline());
@@ -77,7 +77,7 @@ turn off 499,499 through 500,500
 toggle 0,0 through 999,999
 ";
 
-        protected override string SolvePartTwo()
+        protected override object SolvePartTwo()
         {
             int[] grid = new int[1_000_000];
             instructions = BuildInstruction(Input.SplitByNewline());

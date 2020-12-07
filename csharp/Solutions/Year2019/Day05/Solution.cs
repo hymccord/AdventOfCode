@@ -9,7 +9,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             
         }
 
-        protected override string SolvePartOne() {
+        protected override object SolvePartOne() {
             var output = new List<long>();
             string s = Input.Trim('\n');
             IntCode cpu = IntCode.Create(s);
@@ -23,7 +23,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             return output.Last().ToString(); 
         }
 
-        protected override string SolvePartTwo() {
+        protected override object SolvePartTwo() {
             var output = new List<long>();
             string s = Input.Trim('\n');
             IntCode cpu = IntCode.Create(s);

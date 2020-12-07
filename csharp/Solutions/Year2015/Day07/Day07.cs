@@ -12,13 +12,13 @@ namespace AdventOfCode.Solutions.Year2015.Day07
         {
         }
 
-        protected override string SolvePartOne()
+        protected override object SolvePartOne()
         {
             var a = Input.SplitByNewline().Select(Decoder.Decode).ToArray();
             return null;
         }
 
-        protected override string SolvePartTwo()
+        protected override object SolvePartTwo()
         {
             return null;
         }
