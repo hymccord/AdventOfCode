@@ -12,7 +12,8 @@ namespace AdventOfCode.Solutions.Year2020
         int width;
         int height;
 
-        private string test = @"..##.......
+#pragma warning disable IDE0051 // Remove unused private members
+        private readonly string test = @"..##.......
 #...#...#..
 .#....#..#.
 ..#.#...#.#
@@ -22,7 +23,9 @@ namespace AdventOfCode.Solutions.Year2020
 .#........#
 #.##...#...
 #...##....#
-.#..#...#.#";
+.#..#...#.#"
+#pragma warning restore IDE0051 // Remove unused private members
+;
 
         public Day03() : base(3, 2020, "Toboggan Trajectory")
         {
@@ -30,11 +33,6 @@ namespace AdventOfCode.Solutions.Year2020
             //trees = test.SplitByNewline().Select(s => s.ToCharArray()).ToArray();
             width = trees[0].Length;
             height = trees.Length;
-
-            WriteConsole(height, width, 0, 0, (row, col) => 
-            {
-                return (ConsoleColor.White, trees[row][col]);
-            });
         }
 
         protected override string SolvePartOne()
