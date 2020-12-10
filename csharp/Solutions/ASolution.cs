@@ -45,37 +45,16 @@ namespace AdventOfCode.Solutions
         {
             if (Input == null) return;
 
-            bool doOutput = false;
-            string output = $"--- Day {Day}: {Title} --- \n";
+            Console.WriteLine($"--- Day {Day}: {Title} ---");
 
             if (part != 2)
             {
-                if (Part1 != "")
-                {
-                    output += $"Part 1: {Part1}\n";
-                    doOutput = true;
-                }
-                else
-                {
-                    output += "Part 1: Unsolved\n";
-                    if (part == 1) doOutput = true;
-                }
+                Console.WriteLine($"Part 1: {(!string.IsNullOrEmpty(Part1) ? Part1 : "Unsolved")}");
             }
             if (part != 1)
             {
-                if (Part2 != "")
-                {
-                    output += $"Part 2: {Part2}\n";
-                    doOutput = true;
-                }
-                else
-                {
-                    output += "Part 2: Unsolved\n";
-                    if (part == 2) doOutput = true;
-                }
+                Console.WriteLine($"Part 2: {(!string.IsNullOrEmpty(Part2) ? Part2 : "Unsolved")}");
             }
-
-            if (doOutput) Console.WriteLine(output);
         }
 
         string LoadInput()
