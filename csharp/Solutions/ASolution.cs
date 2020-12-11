@@ -29,7 +29,7 @@ namespace AdventOfCode.Solutions
         public string Input => string.IsNullOrEmpty(_input.Value) ? null : _input.Value;
         public string Part1 => $"{_part1.Value ?? ""}";
         public string Part2 => $"{_part2.Value ?? ""}";
-        protected bool DebugOutput { get; set; } = true;
+        protected bool DebugOutput { get; set; } = false;
 
         private protected ASolution(int day, int year, string title = "")
         {
@@ -121,6 +121,17 @@ namespace AdventOfCode.Solutions
                 get
                 {
                     foreach (var direction in Cardinal)
+                    {
+                        yield return Offset(direction);
+                    }
+                }
+            }
+
+            public IEnumerable<Point> SplattNeighbors
+            {
+                get
+                {
+                    foreach (var direction in Splatt)
                     {
                         yield return Offset(direction);
                     }
