@@ -42,19 +42,22 @@ namespace AdventOfCode.Solutions.Year2020
 
         protected override object SolvePartTwo()
         {
-            WriteConsole(height, width, 0, 0, (row, col) =>
+            if (DebugOutput)
             {
-                return (ConsoleColor.White, trees[row][col]);
-            });
+                WriteConsole(height, width, 0, 0, (row, col) =>
+                {
+                    return (ConsoleColor.White, trees[row][col]);
+                });
+            }
 
             return (Toboggan(new Point(1, 1))
                 * Toboggan(new Point(3, 1))
                 * Toboggan(new Point(5, 1))
                 * Toboggan(new Point(7, 1))
-                * Toboggan(new Point(1, 2), true)).ToString();
+                * Toboggan(new Point(1, 2))).ToString();
         }
 
-        private long Toboggan(Point slope, bool print = false)
+        private long Toboggan(Point slope)
         {
             Point p = new Point(0, 0);
             long count = 0;
@@ -67,11 +70,11 @@ namespace AdventOfCode.Solutions.Year2020
 
                 if (trees[p.Y][p.X % width] == '#')
                 {
-                    if (print)
+                    if (DebugOutput)
                         WriteConsole(p.Y, p.X % width, 0, 0, 'X', ConsoleColor.Red);
                     count++;
                 }
-                else if (print)
+                else if (DebugOutput)
                 {
                     WriteConsole(p.Y, p.X % width, 0, 0, 'O', ConsoleColor.Green);
                 }

@@ -22,6 +22,7 @@ namespace AdventOfCode.Solutions
 
         Lazy<string> _input;
         Lazy<object> _part1, _part2;
+        long _perf1, _perf2;
 
         public int Day { get; }
         public int Year { get; }
@@ -37,8 +38,20 @@ namespace AdventOfCode.Solutions
             Year = year;
             Title = title;
             _input = new Lazy<string>(() => LoadInput());
-            _part1 = new Lazy<object>(() => SolvePartOne());
-            _part2 = new Lazy<object>(() => SolvePartTwo());
+            _part1 = new Lazy<object>(() =>
+            {
+                var watch = Stopwatch.StartNew();
+                var o = SolvePartOne();
+                _perf1 = watch.ElapsedMilliseconds;
+                return o;
+            });
+            _part2 = new Lazy<object>(() =>
+            {
+                var watch = Stopwatch.StartNew();
+                var o = SolvePartTwo();
+                _perf2 = watch.ElapsedMilliseconds;
+                return o;
+            });
         }
 
         public void Solve(int part = 0)
@@ -50,10 +63,16 @@ namespace AdventOfCode.Solutions
             if (part != 2)
             {
                 Console.WriteLine($"Part 1: {(!string.IsNullOrEmpty(Part1) ? Part1 : "Unsolved")}");
+#if RELEASE
+                Console.WriteLine($"  (in {_perf1}ms)");
+#endif
             }
             if (part != 1)
             {
                 Console.WriteLine($"Part 2: {(!string.IsNullOrEmpty(Part2) ? Part2 : "Unsolved")}");
+#if RELEASE
+                Console.WriteLine(@$"  (in {_perf2}ms)");
+#endif
             }
         }
 
