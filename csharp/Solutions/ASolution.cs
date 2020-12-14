@@ -198,6 +198,11 @@ namespace AdventOfCode.Solutions
                 return new Point(-a.X, -a.Y);
             }
 
+            public static Point operator *(Point a, int value)
+            {
+                return new Point(a.X * value, a.Y * value);
+            }
+
             public void Deconstruct(out int x, out int y) =>
                 (x, y) = (X, Y);
 
