@@ -111,5 +111,12 @@ namespace AdventOfCode.Solutions {
         {
             return input.Aggregate(1L, LCM);
         }
+
+        public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue defaultValue)
+        {
+            if (!dict.TryGetValue(key, out TValue value))
+                return defaultValue;
+            return value;
+        }
     }
 }
