@@ -114,9 +114,63 @@ namespace AdventOfCode.Solutions {
 
         public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue defaultValue)
         {
-            if (!dict.TryGetValue(key, out TValue value))
-                return defaultValue;
-            return value;
+            return dict.TryGetValue(key, out TValue value) ? value : defaultValue;
+        }
+
+        public static T[,] To2D<T>(this T[][] src)
+        {
+            try
+            {
+                int FirstDim = src.Length;
+                int SecondDim = src.GroupBy(row => row.Length).Single().Key; // throws InvalidOperationException if source is not rectangular
+
+                var result = new T[FirstDim, SecondDim];
+                for (int i = 0; i < FirstDim; ++i)
+                    for (int j = 0; j < SecondDim; ++j)
+                        result[i, j] = src[i][j];
+
+                return result;
+            }
+            catch (InvalidOperationException)
+            {
+                throw new InvalidOperationException("The given jagged array is not rectangular.");
+            }
+        }
+
+        public static T[,] To2D<T>(this IList<T[]> src)
+        {
+            try
+            {
+                int FirstDim = src.Count;
+                int SecondDim = src.GroupBy(row => row.Length).Single().Key; // throws InvalidOperationException if source is not rectangular
+
+                var result = new T[FirstDim, SecondDim];
+                for (int i = 0; i < FirstDim; ++i)
+                    for (int j = 0; j < SecondDim; ++j)
+                        result[i, j] = src[i][j];
+
+                return result;
+            }
+            catch (InvalidOperationException)
+            {
+                throw new InvalidOperationException("The given jagged array is not rectangular.");
+            }
+        }
+
+        public static IEnumerable<T> SliceRow<T>(this T[,] arr, int row)
+        {
+            for (int i = 0; i < arr.GetLength(1); i++)
+            {
+                yield return arr[row, i];
+            }
+        }
+
+        public static IEnumerable<T> SliceColumn<T>(this T[,] arr, int column)
+        {
+            for (int i = 0; i < arr.GetLength(0); i++)
+            {
+                yield return arr[i, column];
+            }
         }
     }
 }
