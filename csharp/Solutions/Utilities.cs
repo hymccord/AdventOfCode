@@ -13,7 +13,7 @@ namespace AdventOfCode.Solutions {
 
         public static int[] ToIntArray(this string str) 
             => str
-                .Split("")
+                .Split(new char[] { ' ', '\n' })
                 .Where(n => int.TryParse(n, out int v))
                 .Select(n => Convert.ToInt32(n))
                 .ToArray(); 
