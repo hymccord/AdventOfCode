@@ -1,0 +1,74 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace AdventOfCode.Solutions.Year2018
+{
+    internal class Day20 : ASolution
+    {
+        public Day20() : base(20, 2018)
+        {
+
+        }
+
+        private Dictionary<char, Point> directions = new Dictionary<char, Point>
+        {
+            { 'N', Point.North },
+            { 'E', Point.East },
+            { 'S', Point.South },
+            { 'W', Point.West },
+        };
+        Dictionary<Point, int> grid = new Dictionary<Point, int>();
+
+        protected override object SolvePartOne()
+        {
+            Stack<(int, Point)> stack = new Stack<(int, Point)>();
+            var sr = new StringReader(Input);
+            sr.Read();
+            char c;
+            int dist = 0;
+            Point pos = new Point();
+            while (sr.Peek() != -1)
+            {
+                switch (c = (char)sr.Read())
+                {
+                    case 'N':
+                    case 'S':
+                    case 'E':
+                    case 'W':
+                        pos += directions[c];
+                        dist++;
+                        if (!grid.ContainsKey(pos) || dist < grid[pos])
+                            grid[pos] = dist;
+                        break;
+                    case '(':
+                        stack.Push((dist, pos));
+                        break;
+                    case ')':
+                        (dist, pos) = stack.Pop();
+                        break;
+                    case '|':
+                        (dist, pos) = stack.Peek();
+                        break;
+                    case '$':
+
+                        break;
+                }
+            }
+
+            return grid.Max(kvp => kvp.Value);
+        }
+
+        protected override object SolvePartTwo()
+        {
+            return grid.Count(kvp => kvp.Value > 999);
+        }
+
+        static string tinput1 = @"^WNE$";
+        static string tinput2 = @"^ENWWW(NEEE|SSE(EE|N))$";
+        static string tinput3 = @"^ENNWSWW(NEWS|)SSSEEN(WNSE|)EE(SWEN|)NNN$";
+        static string tinput4 = @"^ESSWWN(E|NNENN(EESS(WNSE|)SSS|WWWSSSSE(SW|NNNE)))$";
+        static string tinput5 = @"^WSSEESWWWNW(S|NENNEEEENN(ESSSSW(NWSW|SSEN)|WSWWN(E|WWS(E|SS))))$";
+    }
+}
