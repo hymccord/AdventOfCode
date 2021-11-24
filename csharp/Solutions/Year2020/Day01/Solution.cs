@@ -5,21 +5,17 @@ namespace AdventOfCode.Solutions.Year2020
 {
     class Day01 : ASolution
     {
-        private HashSet<int> _numSet;
-        private List<int> _numList;
-
         public Day01() :
             base(1, 2020, "Report Repair")
         {
-            _numSet = Input.SplitByNewline().Select(int.Parse).ToHashSet();
-            _numList = _numSet.ToList();
         }
 
         protected override object SolvePartOne()
         {
-            foreach (var num in _numSet)
+            var numSet = Input.ToIntArray().ToHashSet();
+            foreach (var num in numSet)
             {
-                if (_numSet.Contains(2020 - num))
+                if (numSet.Contains(2020 - num))
                     return (num * (2020 - num)).ToString();
             }
 
@@ -28,18 +24,21 @@ namespace AdventOfCode.Solutions.Year2020
 
         protected override object SolvePartTwo()
         {
+            var numSet = Input.ToIntArray().ToHashSet();
+            var numList = numSet.ToList();
+
             Dictionary<int, (int, int)> pairs = new();
-            for (int i = 0; i < _numList.Count - 1; i++)
+            for (int i = 0; i < numList.Count - 1; i++)
             {
-                for (int j = i + 1; j < _numList.Count; j++)
+                for (int j = i + 1; j < numList.Count; j++)
                 {
-                    int one = _numList[i];
-                    int two = _numList[j];
+                    int one = numList[i];
+                    int two = numList[j];
                     pairs[one + two] = (one, two);
                 }
             }
 
-            foreach (var num in _numSet)
+            foreach (var num in numSet)
             {
                 if (pairs.ContainsKey(2020 - num))
                 {

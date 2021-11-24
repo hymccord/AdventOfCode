@@ -28,16 +28,14 @@ namespace AdventOfCode.Solutions.Year2020.Day15
         private long Elvish(long gameLength)
         {
             Dictionary<long, long[]> _set = new();
-            List<long> _nums = new();
-            _ = Input.Split(',').Select(long.Parse).Select((l, i) => _set[l] = new long[] { i + 1, -1 }).ToArray();
-            _nums.AddRange(_set.Keys);
+            long[] arr = Input.Split(',').Select(long.Parse).ToArray();
+            _ = arr.Select((l, i) => _set[l] = new long[] { i + 1, -1 }).ToArray();
 
             int turn = _set.Count + 1;
-            long lastNum;
+            long lastNum = arr[^1];
 
             while (turn <= gameLength)
             {
-                lastNum = _nums[^1];
                 // First time number was spoken
                 if (_set[lastNum][1] == -1)
                 {
@@ -57,11 +55,10 @@ namespace AdventOfCode.Solutions.Year2020.Day15
                     }
                 }
 
-                _nums.Add(lastNum);
                 turn++;
             }
 
-            return _nums[^1];
+            return lastNum;
         }
     }
 }
