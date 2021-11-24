@@ -51,7 +51,7 @@ namespace AdventOfCode {
 
         public static Config Get(string path) {
             var options = new JsonSerializerOptions(){
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
                 PropertyNameCaseInsensitive = true,
                 WriteIndented = true
             };

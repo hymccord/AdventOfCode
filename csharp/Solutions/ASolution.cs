@@ -8,6 +8,9 @@ using System.Net;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
+using Windows.Win32;
+using Windows.Win32.System.Console;
+
 namespace AdventOfCode.Solutions
 {
 
@@ -22,7 +25,9 @@ namespace AdventOfCode.Solutions
 
         Lazy<string> _input;
         Lazy<object> _part1, _part2;
+#if RELEASE
         long _perf1, _perf2;
+#endif
 
         public int Day { get; }
         public int Year { get; }
@@ -42,14 +47,18 @@ namespace AdventOfCode.Solutions
             {
                 var watch = Stopwatch.StartNew();
                 var o = SolvePartOne();
-                _perf1 = watch.ElapsedMilliseconds;
+#if RELEASE
+                _perf1 = watch.ElapsedMilliseconds; 
+#endif
                 return o;
             });
             _part2 = new Lazy<object>(() =>
             {
                 var watch = Stopwatch.StartNew();
                 var o = SolvePartTwo();
-                _perf2 = watch.ElapsedMilliseconds;
+#if RELEASE
+                _perf2 = watch.ElapsedMilliseconds; 
+#endif
                 return o;
             });
         }
@@ -78,7 +87,8 @@ namespace AdventOfCode.Solutions
 
         string LoadInput()
         {
-            string INPUT_FILEPATH = $"Solutions/Year{Year}/Day{Day.ToString("D2")}/input";
+            string INPUT_FILEPATH = $"Solutions/Year{Year}/Day{Day:D2}input";
+            string INPUT_FILEPATH_ALTERNATE = $"Solutions/Year{Year}/Day{Day:D2}/input";
             string INPUT_URL = $"https://adventofcode.com/{Year}/day/{Day}/input";
             string input = "";
 
@@ -86,16 +96,18 @@ namespace AdventOfCode.Solutions
             {
                 input = File.ReadAllText(INPUT_FILEPATH);
             }
+            else if (File.Exists(INPUT_FILEPATH_ALTERNATE))
+            {
+                input = File.ReadAllText(INPUT_FILEPATH_ALTERNATE);
+            }
             else
             {
                 try
                 {
-                    using (var client = new WebClient())
-                    {
-                        client.Headers.Add(HttpRequestHeader.Cookie, Program.Config.Cookie);
-                        input = client.DownloadString(INPUT_URL).Trim();
-                        File.WriteAllText(INPUT_FILEPATH, input);
-                    }
+                    using var client = new WebClient();
+                    client.Headers.Add(HttpRequestHeader.Cookie, Program.Config.Cookie);
+                    input = client.DownloadString(INPUT_URL).Trim();
+                    File.WriteAllText(INPUT_FILEPATH, input);
                 }
                 catch (WebException e)
                 {
@@ -122,7 +134,7 @@ namespace AdventOfCode.Solutions
 
         protected void WriteOutput(string output)
         {
-            if (this.DebugOutput)
+            if (DebugOutput)
             {
                 Console.WriteLine(output);
             }
@@ -242,74 +254,22 @@ namespace AdventOfCode.Solutions
                 return Math.Abs(X - p.X) + Math.Abs(Y - p.Y);
             }
 
-            public static Point North = new Point(0, -1);
-            public static Point East = new Point(1, 0);
-            public static Point South = new Point(0, 1);
-            public static Point West = new Point(-1, 0);
-        }
-
-        [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        private static extern SafeFileHandle CreateFile(
-            string fileName,
-            [MarshalAs(UnmanagedType.U4)] uint fileAccess,
-            [MarshalAs(UnmanagedType.U4)] uint fileShare,
-            IntPtr securityAttributes,
-            [MarshalAs(UnmanagedType.U4)] FileMode creationDisposition,
-            [MarshalAs(UnmanagedType.U4)] int flags,
-            IntPtr template);
-
-        [DllImport("Kernel32.dll", SetLastError = true)]
-        private static extern bool WriteConsoleOutput(
-            SafeFileHandle hConsoleOutput,
-            CharInfo[] lpBuffer,
-            Coord dwBufferSize,
-            Coord dwBufferCoord,
-            ref SmallRect lpWriteRegion);
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct Coord
-        {
-            public short X;
-            public short Y;
-
-            public Coord(short X, short Y)
-            {
-                this.X = X;
-                this.Y = Y;
-            }
-        }
-
-        [StructLayout(LayoutKind.Explicit)]
-        public struct CharUnion
-        {
-            [FieldOffset(0)] public char UnicodeChar;
-            [FieldOffset(0)] public byte AsciiChar;
-        }
-        [StructLayout(LayoutKind.Explicit)]
-        public struct CharInfo
-        {
-            [FieldOffset(0)] public CharUnion Char;
-            [FieldOffset(2)] public short Attributes;
-        }
-        [StructLayout(LayoutKind.Sequential)]
-        public struct SmallRect
-        {
-            public short Left;
-            public short Top;
-            public short Right;
-            public short Bottom;
+            public static Point North = new(0, -1);
+            public static Point East = new(1, 0);
+            public static Point South = new(0, 1);
+            public static Point West = new(-1, 0);
         }
 
 
         protected void WriteConsole(int rows, int cols, short left, short top, Func<int, int, (ConsoleColor, char)> indexingFunc)
         {
-            SafeFileHandle h = CreateFile("CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
+            SafeFileHandle h = OpenConOut();
 
             if (!h.IsInvalid)
             {
-                CharInfo[] buf = new CharInfo[rows * cols];
+                var screenBuffer = new CHAR_INFO[rows * cols];
 
-                SmallRect rect = new SmallRect
+                SMALL_RECT rect = new()
                 {
                     Left = left,
                     Top = top,
@@ -324,28 +284,29 @@ namespace AdventOfCode.Solutions
                     for (int x = 0; x < cols; x++)
                     {
                         (color, character) = indexingFunc(y, x);
-                        buf[y * cols + x].Attributes = (short)color;
-                        buf[y * cols + x].Char.AsciiChar = (byte)character;
+                        screenBuffer[y * cols + x].Attributes = (ushort)color;
+                        screenBuffer[y * cols + x].Char.AsciiChar = new Windows.Win32.Foundation.CHAR((byte)character);
                     }
                 }
-                bool b = WriteConsoleOutput(h, buf,
-                    new Coord() { X = (short)cols, Y = (short)rows },
-                    new Coord() { X = 0, Y = 0 },
+                PInvoke.WriteConsoleOutput(h,
+                    in screenBuffer[0],
+                    new COORD { X = (short)cols, Y = (short)rows },
+                    new COORD { X = 0, Y = 0 },
                     ref rect);
             }
         }
 
         protected void WriteConsole(int row, int col, short left, short top, char c, ConsoleColor color = ConsoleColor.White)
         {
-            SafeFileHandle h = CreateFile("CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
+            SafeFileHandle h = OpenConOut();
 
             if (!h.IsInvalid)
             {
-                CharInfo[] buf = new CharInfo[1];
-                buf[0].Attributes = (short)color;
-                buf[0].Char.AsciiChar = (byte)c;
+                var character = new CHAR_INFO();
+                character.Attributes = (ushort)color;
+                character.Char.UnicodeChar = c;
 
-                var rect = new SmallRect
+                var rect = new SMALL_RECT
                 {
                     Left = (short)(left + col),
                     Top = (short)(top + row),
@@ -353,18 +314,67 @@ namespace AdventOfCode.Solutions
                     Bottom = (short)(row + top)
                 };
 
-                bool b = WriteConsoleOutput(h, buf,
-                    new Coord() { X = 1, Y = 1 },
-                    new Coord() { X = 0, Y = 0 },
+                PInvoke.WriteConsoleOutput(h,
+                    in character,
+                    new COORD() { X = 1, Y = 1 },
+                    new COORD() { X = 0, Y = 0 },
                     ref rect);
             }
+        }
+
+        protected void ClearConsole()
+        {
+            var rows = (short)Console.WindowHeight;
+            var cols = (short)Console.WindowWidth;
+            SafeFileHandle h = OpenConOut();
+
+
+            if (!h.IsInvalid)
+            {
+                var screenBuffer = new CHAR_INFO[rows * cols];
+
+                var writeRegion = new SMALL_RECT
+                {
+                    Left = 0,
+                    Top = 0,
+                    Right = (short)(cols),
+                    Bottom = (short)(rows)
+                };
+                for (int y = 0; y < rows; y++)
+                {
+                    for (int x = 0; x < cols; x++)
+                    {
+                        screenBuffer[y * cols + x].Attributes = (byte)Console.ForegroundColor;
+                        screenBuffer[y * cols + x].Char.UnicodeChar = ' ';
+                    }
+                }
+                PInvoke.WriteConsoleOutput(
+                    h,
+                    screenBuffer[0],
+                    new COORD { X = cols, Y = rows },
+                    new COORD(),
+                    ref writeRegion
+                    );
+            }
+        }
+
+        private SafeFileHandle OpenConOut()
+        {
+            SafeFileHandle h = PInvoke.CreateFile("CONOUT$",
+                Windows.Win32.Storage.FileSystem.FILE_ACCESS_FLAGS.FILE_GENERIC_READ | Windows.Win32.Storage.FileSystem.FILE_ACCESS_FLAGS.FILE_GENERIC_WRITE,
+                Windows.Win32.Storage.FileSystem.FILE_SHARE_MODE.FILE_SHARE_READ | Windows.Win32.Storage.FileSystem.FILE_SHARE_MODE.FILE_SHARE_WRITE,
+                null,
+                Windows.Win32.Storage.FileSystem.FILE_CREATION_DISPOSITION.OPEN_EXISTING,
+                Windows.Win32.Storage.FileSystem.FILE_FLAGS_AND_ATTRIBUTES.FILE_ATTRIBUTE_NORMAL,
+                null);
+            return h;
         }
 
         [DebuggerDisplay("{Value}")]
         public class TreeNode<T> : IEnumerable<TreeNode<T>>, IEnumerable
         {
             private T _value;
-            private HashSet<TreeNode<T>> _children = new HashSet<TreeNode<T>>();
+            private HashSet<TreeNode<T>> _children = new();
 
             public TreeNode(T value)
             {
@@ -456,10 +466,10 @@ namespace AdventOfCode.Solutions
 
             public List<Point> A_Star(Point start, Point goal, Func<Point, Point, int> h)
             {
-                SortedList<double, Point> frontier = new SortedList<double, Point>(new DuplicateKeyComparer<double>());
-                HashSet<Point> visited = new HashSet<Point>();
-                Dictionary<Point, double> costSoFar = new Dictionary<Point, double>() { { start, 0 } };
-                Dictionary<Point, Point> cameFrom = new Dictionary<Point, Point>();
+                SortedList<double, Point> frontier = new(new DuplicateKeyComparer<double>());
+                HashSet<Point> visited = new();
+                Dictionary<Point, double> costSoFar = new() { { start, 0 } };
+                Dictionary<Point, Point> cameFrom = new();
                 frontier.Add(0, start);
 
                 while (!(frontier.Count == 0))
