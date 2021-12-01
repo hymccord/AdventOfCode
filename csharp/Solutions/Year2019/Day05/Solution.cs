@@ -1,15 +1,16 @@
-using System.Collections.Generic;
-using System.Linq;
+namespace AdventOfCode.Solutions.Year2019
+{
 
-namespace AdventOfCode.Solutions.Year2019 {
+    class Day05 : ASolution
+    {
 
-    class Day05 : ASolution {
-        
-        public Day05() : base(5, 2019, "") {
-            
+        public Day05() : base(5, 2019, "")
+        {
+
         }
 
-        protected override object SolvePartOne() {
+        protected override object SolvePartOne()
+        {
             var output = new List<long>();
             string s = Input.Trim('\n');
             IntCode cpu = IntCode.Create(s);
@@ -20,10 +21,11 @@ namespace AdventOfCode.Solutions.Year2019 {
                 System.Console.WriteLine(e);
             };
             cpu.Run();
-            return output.Last().ToString(); 
+            return output.Last().ToString();
         }
 
-        protected override object SolvePartTwo() {
+        protected override object SolvePartTwo()
+        {
             var output = new List<long>();
             string s = Input.Trim('\n');
             IntCode cpu = IntCode.Create(s);

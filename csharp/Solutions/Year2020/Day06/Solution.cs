@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdventOfCode.Solutions.Year2020.Day06
+﻿namespace AdventOfCode.Solutions.Year2020.Day06
 {
     class Day06 : ASolution
     {
-        
+
         public Day06()
-            : base(06, 2020, "") 
+            : base(06, 2020, "")
         {
 
         }

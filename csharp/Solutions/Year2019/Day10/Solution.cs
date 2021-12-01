@@ -1,11 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
-namespace AdventOfCode.Solutions.Year2019 {
+namespace AdventOfCode.Solutions.Year2019
+{
 
-    class Day10 : ASolution {
+    class Day10 : ASolution
+    {
         string test = @".#..#
 .....
 #####
@@ -17,10 +16,12 @@ namespace AdventOfCode.Solutions.Year2019 {
         int _rows = 0, _cols = 0;
         private (Point location, int lineOfSightCount) _thePoint;
 
-        public Day10() : base(10, 2019, "") {
+        public Day10() : base(10, 2019, "")
+        {
         }
 
-        protected override object SolvePartOne() {
+        protected override object SolvePartOne()
+        {
             ParseAsteroids(Input);
             _thePoint = _asteroids.Select(FigureLineOfSight).OrderByDescending(t => t.count).First();
 
@@ -34,11 +35,12 @@ namespace AdventOfCode.Solutions.Year2019 {
                 .Select(p => p - point)
                 .Select(p => Math.Atan2(p.Y, p.X))
                 .Distinct().Count();
-            
+
             return (point, i);
         }
 
-        protected override object SolvePartTwo() {
+        protected override object SolvePartTwo()
+        {
             Point station = _thePoint.location;
             var a = _asteroids.Except(new Point[] { station })
                 .Select(p => new AsteroidDistance(station, p))
@@ -48,7 +50,7 @@ namespace AdventOfCode.Solutions.Year2019 {
                 .Select(g => new Queue<AsteroidDistance>(g));
 
             var qqs = new Queue<Queue<AsteroidDistance>>(a);
-            
+
 
             int i = 0;
             AsteroidDistance cur = null;

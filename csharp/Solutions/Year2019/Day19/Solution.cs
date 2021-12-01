@@ -1,17 +1,22 @@
-namespace AdventOfCode.Solutions.Year2019 {
+namespace AdventOfCode.Solutions.Year2019
+{
 
-    class Day19 : ASolution {
-        
-        public Day19() : base(19, 2019, "") {
-            
+    class Day19 : ASolution
+    {
+
+        public Day19() : base(19, 2019, "")
+        {
+
         }
 
-        protected override object SolvePartOne() {
-            return null; 
+        protected override object SolvePartOne()
+        {
+            return null;
         }
 
-        protected override object SolvePartTwo() {
-            return null; 
+        protected override object SolvePartTwo()
+        {
+            return null;
         }
     }
 }

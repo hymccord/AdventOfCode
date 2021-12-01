@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
 namespace AdventOfCode.Solutions.Year2020
 {
     class Day01 : ASolution

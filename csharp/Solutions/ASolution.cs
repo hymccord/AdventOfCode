@@ -1,11 +1,7 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Runtime.InteropServices;
+
 using Microsoft.Win32.SafeHandles;
 
 using Windows.Win32;
@@ -26,7 +22,7 @@ namespace AdventOfCode.Solutions
         Lazy<string> _input;
         Lazy<object> _part1, _part2;
 #if RELEASE
-        long _perf1, _perf2;
+        TimeSpan _perf1, _perf2;
 #endif
 
         public int Day { get; }
@@ -49,7 +45,7 @@ namespace AdventOfCode.Solutions
                 var watch = Stopwatch.StartNew();
                 var o = SolvePartOne();
 #if RELEASE
-                _perf1 = watch.ElapsedMilliseconds; 
+                _perf1 = watch.Elapsed;
 #endif
                 return o;
             });
@@ -58,7 +54,7 @@ namespace AdventOfCode.Solutions
                 var watch = Stopwatch.StartNew();
                 var o = SolvePartTwo();
 #if RELEASE
-                _perf2 = watch.ElapsedMilliseconds; 
+                _perf2 = watch.Elapsed;
 #endif
                 return o;
             });
@@ -74,14 +70,14 @@ namespace AdventOfCode.Solutions
             {
                 Console.WriteLine($"Part 1: {(!string.IsNullOrEmpty(Part1) ? Part1 : "Unsolved")}");
 #if RELEASE
-                Console.WriteLine($"  (in {_perf1}ms)");
+                Console.WriteLine($"  (in {_perf1:ss\\.fffff}s)");
 #endif
             }
             if (part != 1)
             {
                 Console.WriteLine($"Part 2: {(!string.IsNullOrEmpty(Part2) ? Part2 : "Unsolved")}");
 #if RELEASE
-                Console.WriteLine(@$"  (in {_perf2}ms)");
+                Console.WriteLine($"  (in {_perf2:ss\\.fffff}s)");
 #endif
             }
         }

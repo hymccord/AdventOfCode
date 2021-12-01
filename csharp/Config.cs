@@ -1,75 +1,95 @@
-using System; 
-using System.IO; 
-using System.Linq; 
-using System.Text.Json; 
-using System.Text.RegularExpressions; 
+using System.Text.Json;
 
-namespace AdventOfCode {
+namespace AdventOfCode
+{
 
-    class Config {
+    class Config
+    {
 
-        string _c; 
+        string _c;
         int _y;
         int[] _d;
 
-        public string Cookie { 
+        public string Cookie
+        {
             get => _c;
-            set {
-                if(Regex.IsMatch(value, "^session=[a-z0-9]+$")) {
-                    _c = value; 
-                } else {
+            set
+            {
+                if (Regex.IsMatch(value, "^session=[a-z0-9]+$"))
+                {
+                    _c = value;
+                }
+                else
+                {
                     _c = "";
                 }
             }
         }
-        public int Year { 
+        public int Year
+        {
             get => _y;
-            set {
-                if(value < 2015 || value > DateTime.Now.Year) {
-                    _y = DateTime.Now.Year; 
-                } else {
-                    _y = value; 
+            set
+            {
+                if (value < 2015 || value > DateTime.Now.Year)
+                {
+                    _y = DateTime.Now.Year;
                 }
-            } 
+                else
+                {
+                    _y = value;
+                }
+            }
         }
-        public int[] Days { 
+        public int[] Days
+        {
             get => _d;
-            set {
+            set
+            {
                 bool allDaysCovered = false;
-                _d = value.Where(v => {
-                    if(v == 0) allDaysCovered = true; 
+                _d = value.Where(v =>
+                {
+                    if (v == 0) allDaysCovered = true;
                     return v > 0 && v < 26;
                 }).ToArray();
 
-                if(allDaysCovered) {
-                    _d = new int[]{0};
-                } else {
+                if (allDaysCovered)
+                {
+                    _d = new int[] { 0 };
+                }
+                else
+                {
                     Array.Sort(_d);
                 }
             }
         }
 
-        public static Config Get(string path) {
-            var options = new JsonSerializerOptions(){
+        public static Config Get(string path)
+        {
+            var options = new JsonSerializerOptions()
+            {
                 DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
                 PropertyNameCaseInsensitive = true,
                 WriteIndented = true
             };
-            Config config; 
-            if(File.Exists(path)) {
+            Config config;
+            if (File.Exists(path))
+            {
                 config = JsonSerializer.Deserialize<Config>(File.ReadAllText(path), options);
-            } else {
+            }
+            else
+            {
                 config = new Config();
-                config.setDefaults(); 
+                config.setDefaults();
                 File.WriteAllText(path, JsonSerializer.Serialize<Config>(config, options));
             }
-            return config; 
+            return config;
         }
 
-        void setDefaults() {
-            Cookie = ""; 
+        void setDefaults()
+        {
+            Cookie = "";
             Year = DateTime.Now.Year;
-            Days = (DateTime.Now.Month == 12) ? new int[]{DateTime.Now.Day} : new int[]{0}; 
+            Days = (DateTime.Now.Month == 12) ? new int[] { DateTime.Now.Day } : new int[] { 0 };
         }
     }
 }

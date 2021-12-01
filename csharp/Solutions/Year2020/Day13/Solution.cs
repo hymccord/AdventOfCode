@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdventOfCode.Solutions.Year2020.Day13
+﻿namespace AdventOfCode.Solutions.Year2020.Day13
 {
     class Day13 : ASolution
     {
@@ -37,7 +31,7 @@ namespace AdventOfCode.Solutions.Year2020.Day13
                 .Select(a => new { index = a.i, id = int.Parse(a.s) })
                 .ToArray();
 
-            
+
             long num = 0;
             long jump = _pairs[0].id;
             for (int i = 1; i < _pairs.Length; i++)

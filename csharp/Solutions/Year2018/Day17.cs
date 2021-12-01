@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-
-namespace AdventOfCode.Solutions.Year2018
+﻿namespace AdventOfCode.Solutions.Year2018
 {
     internal class Day17 : ASolution
     {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-
+﻿
 using AdventofCode.ELF_Lang;
 
 namespace AdventOfCode.Solutions.Year2018

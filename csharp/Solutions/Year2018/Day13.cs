@@ -1,10 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-
-namespace AdventOfCode.Solutions.Year2018
+﻿namespace AdventOfCode.Solutions.Year2018
 {
     class Day13 : ASolution
     {

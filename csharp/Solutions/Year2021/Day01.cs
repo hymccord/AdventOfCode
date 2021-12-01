@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-
-namespace AdventOfCode.Solutions.Year2021;
+﻿namespace AdventOfCode.Solutions.Year2021;
 
 internal class Day01 : ASolution
 {
@@ -13,37 +7,37 @@ internal class Day01 : ASolution
 
     protected override object SolvePartOne()
     {
-    var ints = Input.ToIntArray();
-    int c = 0;
+        var ints = Input.ToIntArray();
+        int c = 0;
 
-    for (int i = 1; i <= ints.Length - 1; i++)
-    {
-        if (ints[i] > ints[i - 1])
+        for (int i = 1; i <= ints.Length - 1; i++)
         {
-            c++;
+            if (ints[i] > ints[i - 1])
+            {
+                c++;
+            }
         }
-    }
 
-    return c;
+        return c;
     }
 
     protected override object SolvePartTwo()
     {
-    var ints = Input.ToIntArray();
+        var ints = Input.ToIntArray();
 
-    int previousWindow = int.MaxValue;
-    int c = 0;
+        int previousWindow = int.MaxValue;
+        int c = 0;
 
-    for (int i = 0; i <= ints.Length - 3; i++)
-    {
-        int currentWindow = ints[i..(i + 3)].Sum();
-        if (currentWindow > previousWindow)
-            c++;
+        for (int i = 0; i <= ints.Length - 3; i++)
+        {
+            int currentWindow = ints[i..(i + 3)].Sum();
+            if (currentWindow > previousWindow)
+                c++;
 
-        previousWindow = currentWindow;
-    }
+            previousWindow = currentWindow;
+        }
 
-    return c;
+        return c;
     }
 
     string test = @"199

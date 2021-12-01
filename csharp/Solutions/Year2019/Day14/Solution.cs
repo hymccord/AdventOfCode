@@ -1,30 +1,31 @@
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
-namespace AdventOfCode.Solutions.Year2019 {
+namespace AdventOfCode.Solutions.Year2019
+{
 
-    class Day14 : ASolution {
+    class Day14 : ASolution
+    {
 
         Dictionary<string, List<ChemicalInput>> _outputToInputs = new Dictionary<string, List<ChemicalInput>>();
         Dictionary<string, long> _outputToCount = new Dictionary<string, long>();
 
-        public Day14() : base(14, 2019, "") {
-                
+        public Day14() : base(14, 2019, "")
+        {
+
         }
 
-        protected override object SolvePartOne() {
+        protected override object SolvePartOne()
+        {
             BuildReactionDict();
 
             this.DebugOutput = false;
             var oreNeeded = ProcessChemical("", new ChemicalInput("FUEL", 1), new Dictionary<string, long>());
 
-            return oreNeeded.ToString(); 
+            return oreNeeded.ToString();
         }
 
-        protected override object SolvePartTwo() {
+        protected override object SolvePartTwo()
+        {
             this.DebugOutput = false;
 
             var minFuel = ProcessChemical("", new ChemicalInput("FUEL", 1), new Dictionary<string, long>());
@@ -52,7 +53,7 @@ namespace AdventOfCode.Solutions.Year2019 {
             {
                 var arr = line.Split("=>");
                 var inputs = arr[0].Split(',', System.StringSplitOptions.RemoveEmptyEntries)
-                    .Select(s => 
+                    .Select(s =>
                     {
                         var chem = s.Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
                         return new ChemicalInput(chem[1], long.Parse(chem[0]));

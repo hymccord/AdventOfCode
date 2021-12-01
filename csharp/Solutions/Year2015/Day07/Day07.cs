@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-
-namespace AdventOfCode.Solutions.Year2015.Day07
+﻿namespace AdventOfCode.Solutions.Year2015.Day07
 {
     class Day07 : ASolution
     {
@@ -70,7 +64,7 @@ namespace AdventOfCode.Solutions.Year2015.Day07
                 {
                     e = new BinaryOpExpression()
                     {
-                        
+
                     };
                 }
                 else
@@ -90,7 +84,7 @@ namespace AdventOfCode.Solutions.Year2015.Day07
 
         enum BinaryOp
         {
-            And, 
+            And,
             Or,
             Xor,
             Lsh,

@@ -1,11 +1,10 @@
 #nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace AdventOfCode.Solutions.Year2019 {
+namespace AdventOfCode.Solutions.Year2019
+{
 
-    class Day03 : ASolution {
+    class Day03 : ASolution
+    {
         private int _minHatten = int.MaxValue;
         private int _minSteps = int.MaxValue;
         string[] _wire1;
@@ -18,14 +17,16 @@ namespace AdventOfCode.Solutions.Year2019 {
         string test2 = "R75,D30,R83,U83,L12,D49,R71,U7,L72\nU62,R66,U55,R34,D71,R55,D58,R83";
         string test3 = "R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51\nU98,R91,D20,R16,D67,R40,U7,R15,U6,R7";
 
-        public Day03() : base(3, 2019, "") {
+        public Day03() : base(3, 2019, "")
+        {
             var wires = test.SplitByNewline(true);
             _wire1 = wires[0].Split(',');
             _wire2 = wires[1].Split(',');
             _points = new Dictionary<Point, int>();
         }
 
-        protected override object SolvePartOne() {
+        protected override object SolvePartOne()
+        {
             int steps = 0;
             var origin = new Point(0, 0);
 
@@ -59,7 +60,7 @@ namespace AdventOfCode.Solutions.Year2019 {
 
                     if (_points.ContainsKey(cur))
                     {
-                        _dict[(cur.X,cur.Y)] = 'X';
+                        _dict[(cur.X, cur.Y)] = 'X';
                         _minHatten = Math.Min(_minHatten, origin.Manhatten(cur));
                         _minSteps = Math.Min(_points[cur] + steps, _minSteps);
                     }
@@ -102,7 +103,8 @@ namespace AdventOfCode.Solutions.Year2019 {
             return _minHatten.ToString();
         }
 
-        protected override object SolvePartTwo() {
+        protected override object SolvePartTwo()
+        {
             return _minSteps.ToString();
         }
 

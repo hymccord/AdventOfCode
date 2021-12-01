@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-
-namespace AdventOfCode.Solutions.Year2019
+﻿namespace AdventOfCode.Solutions.Year2019
 {
     internal class IntCode
     {
@@ -95,7 +89,7 @@ namespace AdventOfCode.Solutions.Year2019
             return state.memory[InstructionPointer++];
         }
 
-        internal void RaiseOutput(long s) => 
+        internal void RaiseOutput(long s) =>
             Output?.Invoke(this, s);
 
         internal long GetParameter(long parameterIndex, long opCode)
@@ -154,232 +148,232 @@ namespace AdventOfCode.Solutions.Year2019
         {
             state.memory[index] = value;
         }
-    abstract class IntCodeInstruction
-    {
-        public IntCodeInstruction(OpCode code)
+        abstract class IntCodeInstruction
         {
-            Code = code;
-        }
-        public OpCode Code { get; internal set; }
-
-        public long OpCount => InstructionOpCounts.OpCount[(long)Code];
-
-        public abstract void Execute(IntCode decoder, long parameterMode);
-
-        protected long GetParameter(long mode, long pointer, long[] byteCode)
-        {
-            return mode == 0 ? byteCode[byteCode[pointer]] : byteCode[pointer];
-        }
-
-        protected void SetParameter(long mode, long pointer, long[] byteCode, long value)
-        {
-            if (mode == 0)
+            public IntCodeInstruction(OpCode code)
             {
-                byteCode[byteCode[pointer]] = value;
+                Code = code;
             }
-            else
+            public OpCode Code { get; internal set; }
+
+            public long OpCount => InstructionOpCounts.OpCount[(long)Code];
+
+            public abstract void Execute(IntCode decoder, long parameterMode);
+
+            protected long GetParameter(long mode, long pointer, long[] byteCode)
             {
-                byteCode[pointer] = value;
+                return mode == 0 ? byteCode[byteCode[pointer]] : byteCode[pointer];
+            }
+
+            protected void SetParameter(long mode, long pointer, long[] byteCode, long value)
+            {
+                if (mode == 0)
+                {
+                    byteCode[byteCode[pointer]] = value;
+                }
+                else
+                {
+                    byteCode[pointer] = value;
+                }
             }
         }
-    }
 
-    sealed class halt : IntCodeInstruction
-    {
-        public halt() : base(OpCode.halt)
+        sealed class halt : IntCodeInstruction
         {
+            public halt() : base(OpCode.halt)
+            {
+            }
+
+            public override void Execute(IntCode decoder, long parameterMode) { }
         }
 
-        public override void Execute(IntCode decoder, long parameterMode) { }
-    }
-
-    sealed class invalid : IntCodeInstruction
-    {
-        public static readonly invalid Instance = new invalid();
-        invalid() : base(OpCode.invalid) { }
-        public override void Execute(IntCode decoder, long parameterMode) => throw new Exception();
-    }
-
-
-    class addm : IntCodeInstruction
-    {
-        public addm() : base(OpCode.addr)
+        sealed class invalid : IntCodeInstruction
         {
-
-        }
-        public override void Execute(IntCode decoder, long parameterMode)
-        {
-            ref var state = ref decoder.state;
-            long m1 = decoder.GetParameter(0, parameterMode);
-            long m2 = decoder.GetParameter(1, parameterMode);
-
-            decoder.SetParameter(2, parameterMode, m1 + m2);
-        }
-    }
-
-    class mulm : IntCodeInstruction
-    {
-        public mulm() : base(OpCode.mulr)
-        {
-
-        }
-        public override void Execute(IntCode decoder, long parameterMode)
-        {
-            long m1 = decoder.GetParameter(0, parameterMode);
-            long m2 = decoder.GetParameter(1, parameterMode);
-
-            decoder.SetParameter(2, parameterMode, m1 * m2);
-        }
-    }
-
-    class input : IntCodeInstruction
-    {
-        public input() : base(OpCode.input)
-        {
-
+            public static readonly invalid Instance = new invalid();
+            invalid() : base(OpCode.invalid) { }
+            public override void Execute(IntCode decoder, long parameterMode) => throw new Exception();
         }
 
-        public override void Execute(IntCode decoder, long parameterMode)
+
+        class addm : IntCodeInstruction
         {
-            ref var state = ref decoder.state;
-            long p1 = parameterMode % 2;
+            public addm() : base(OpCode.addr)
+            {
 
-            if (decoder.askInput) Console.Write("Input: ");
-            decoder.SetParameter(0, parameterMode, decoder.GetInput(state.inputRequest++));
+            }
+            public override void Execute(IntCode decoder, long parameterMode)
+            {
+                ref var state = ref decoder.state;
+                long m1 = decoder.GetParameter(0, parameterMode);
+                long m2 = decoder.GetParameter(1, parameterMode);
 
-            //state.instructionsRun.Add("Store")
-        }
-    }
-
-    class output : IntCodeInstruction
-    {
-        public output() : base(OpCode.output)
-        {
-
+                decoder.SetParameter(2, parameterMode, m1 + m2);
+            }
         }
 
-        public override void Execute(IntCode decoder, long parameterMode)
+        class mulm : IntCodeInstruction
         {
-            ref var state = ref decoder.state;
+            public mulm() : base(OpCode.mulr)
+            {
 
-            decoder.RaiseOutput(decoder.GetParameter(0, parameterMode));
-        }
-    }
+            }
+            public override void Execute(IntCode decoder, long parameterMode)
+            {
+                long m1 = decoder.GetParameter(0, parameterMode);
+                long m2 = decoder.GetParameter(1, parameterMode);
 
-    class jmptrue : IntCodeInstruction
-    {
-        public jmptrue() : base(OpCode.jmptrue)
-        {
-
-        }
-
-        public override void Execute(IntCode decoder, long parameterMode)
-        {
-            long m1 = decoder.GetParameter(0, parameterMode);
-            long m2 = decoder.GetParameter(1, parameterMode);
-
-            if (m1 != 0)
-                decoder.InstructionPointer = m2;
-        }
-    }
-
-    class jmpfalse : IntCodeInstruction
-    {
-        public jmpfalse() : base(OpCode.jmpfalse)
-        {
-
+                decoder.SetParameter(2, parameterMode, m1 * m2);
+            }
         }
 
-        public override void Execute(IntCode decoder, long parameterMode)
+        class input : IntCodeInstruction
         {
-            long m1 = decoder.GetParameter(0, parameterMode);
-            long m2 = decoder.GetParameter(1, parameterMode);
+            public input() : base(OpCode.input)
+            {
 
-            if (m1 == 0)
-                decoder.InstructionPointer = m2;
-        }
-    }
+            }
 
-    class slt : IntCodeInstruction
-    {
-        public slt() : base(OpCode.slt)
-        {
+            public override void Execute(IntCode decoder, long parameterMode)
+            {
+                ref var state = ref decoder.state;
+                long p1 = parameterMode % 2;
 
-        }
+                if (decoder.askInput) Console.Write("Input: ");
+                decoder.SetParameter(0, parameterMode, decoder.GetInput(state.inputRequest++));
 
-        public override void Execute(IntCode decoder, long parameterMode)
-        {
-            long m1 = decoder.GetParameter(0, parameterMode);
-            long m2 = decoder.GetParameter(1, parameterMode);
-
-            decoder.SetParameter(2, parameterMode, m1 < m2 ? 1 : 0);
-        }
-    }
-
-    class eq : IntCodeInstruction
-    {
-        public eq() : base(OpCode.eq)
-        {
-
+                //state.instructionsRun.Add("Store")
+            }
         }
 
-        public override void Execute(IntCode decoder, long parameterMode)
+        class output : IntCodeInstruction
         {
-            long m1 = decoder.GetParameter(0, parameterMode);
-            long m2 = decoder.GetParameter(1, parameterMode);
+            public output() : base(OpCode.output)
+            {
 
-            decoder.SetParameter(2, parameterMode, m1 == m2 ? 1 : 0);
+            }
+
+            public override void Execute(IntCode decoder, long parameterMode)
+            {
+                ref var state = ref decoder.state;
+
+                decoder.RaiseOutput(decoder.GetParameter(0, parameterMode));
+            }
         }
-    }
 
-    class rel : IntCodeInstruction
-    {
-        public rel() : base(OpCode.rel)
+        class jmptrue : IntCodeInstruction
         {
+            public jmptrue() : base(OpCode.jmptrue)
+            {
 
+            }
+
+            public override void Execute(IntCode decoder, long parameterMode)
+            {
+                long m1 = decoder.GetParameter(0, parameterMode);
+                long m2 = decoder.GetParameter(1, parameterMode);
+
+                if (m1 != 0)
+                    decoder.InstructionPointer = m2;
+            }
         }
 
-        public override void Execute(IntCode decoder, long parameterMode)
+        class jmpfalse : IntCodeInstruction
         {
-            ref var state = ref decoder.state;
+            public jmpfalse() : base(OpCode.jmpfalse)
+            {
 
-            long m1 = decoder.GetParameter(0, parameterMode);
+            }
 
-            state.relativeBase += m1;
+            public override void Execute(IntCode decoder, long parameterMode)
+            {
+                long m1 = decoder.GetParameter(0, parameterMode);
+                long m2 = decoder.GetParameter(1, parameterMode);
+
+                if (m1 == 0)
+                    decoder.InstructionPointer = m2;
+            }
         }
-    }
 
-    enum OpCode
-    {
-        invalid,
-        addr,
-        mulr,
-        input,
-        output,
-        jmptrue,
-        jmpfalse,
-        slt,
-        eq,
-        rel,
-        halt = 99,
-    }
-
-    enum ParameterMode
-    {
-        Position,
-        Immediate,
-        Relative,
-    }
-
-    static class DecoderConstants
-    {
-        public const int NumberOfCodeValues = 100;
-    }
-
-    static class InstructionOpCounts
-    {
-        internal static byte[] OpCount = new byte[DecoderConstants.NumberOfCodeValues]
+        class slt : IntCodeInstruction
         {
+            public slt() : base(OpCode.slt)
+            {
+
+            }
+
+            public override void Execute(IntCode decoder, long parameterMode)
+            {
+                long m1 = decoder.GetParameter(0, parameterMode);
+                long m2 = decoder.GetParameter(1, parameterMode);
+
+                decoder.SetParameter(2, parameterMode, m1 < m2 ? 1 : 0);
+            }
+        }
+
+        class eq : IntCodeInstruction
+        {
+            public eq() : base(OpCode.eq)
+            {
+
+            }
+
+            public override void Execute(IntCode decoder, long parameterMode)
+            {
+                long m1 = decoder.GetParameter(0, parameterMode);
+                long m2 = decoder.GetParameter(1, parameterMode);
+
+                decoder.SetParameter(2, parameterMode, m1 == m2 ? 1 : 0);
+            }
+        }
+
+        class rel : IntCodeInstruction
+        {
+            public rel() : base(OpCode.rel)
+            {
+
+            }
+
+            public override void Execute(IntCode decoder, long parameterMode)
+            {
+                ref var state = ref decoder.state;
+
+                long m1 = decoder.GetParameter(0, parameterMode);
+
+                state.relativeBase += m1;
+            }
+        }
+
+        enum OpCode
+        {
+            invalid,
+            addr,
+            mulr,
+            input,
+            output,
+            jmptrue,
+            jmpfalse,
+            slt,
+            eq,
+            rel,
+            halt = 99,
+        }
+
+        enum ParameterMode
+        {
+            Position,
+            Immediate,
+            Relative,
+        }
+
+        static class DecoderConstants
+        {
+            public const int NumberOfCodeValues = 100;
+        }
+
+        static class InstructionOpCounts
+        {
+            internal static byte[] OpCount = new byte[DecoderConstants.NumberOfCodeValues]
+            {
             0,//invalid
             3,//addr
             3,//mulr
@@ -480,19 +474,19 @@ namespace AdventOfCode.Solutions.Year2019
             0,//invalid
             0,//invalid
             0,//halt
-        };
-    }
+            };
+        }
 
-    static class OpCodeHandlersTable
-    {
-        internal static readonly IntCodeInstruction[] Handlers;
-
-        static OpCodeHandlersTable()
+        static class OpCodeHandlersTable
         {
-            var invalidInstr = invalid.Instance;
+            internal static readonly IntCodeInstruction[] Handlers;
 
-            Handlers = new IntCodeInstruction[100]
+            static OpCodeHandlersTable()
             {
+                var invalidInstr = invalid.Instance;
+
+                Handlers = new IntCodeInstruction[100]
+                {
                 invalidInstr,
                 new addm(),
                 new mulm(),
@@ -593,8 +587,8 @@ namespace AdventOfCode.Solutions.Year2019
                 invalidInstr,
                 invalidInstr,
                 new halt(),
-            };
+                };
+            }
         }
-    }
     }
 }

@@ -1,12 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+namespace AdventOfCode.Solutions.Year2019
+{
 
-namespace AdventOfCode.Solutions.Year2019 {
-
-    class Day06 : ASolution {
+    class Day06 : ASolution
+    {
         string _test = @"COM)B
 B)C
 D)E
@@ -36,11 +32,13 @@ I)SAN";
         private Dictionary<string, TreeNode<string>> _tree;
         private TreeNode<string> _com;
 
-        public Day06() : base(6, 2019, "") {
-            
+        public Day06() : base(6, 2019, "")
+        {
+
         }
 
-        protected override object SolvePartOne() {
+        protected override object SolvePartOne()
+        {
             _tree = BuildTree(Input);
             _com = _tree["COM"];
 
@@ -60,10 +58,11 @@ I)SAN";
                     }
                 }
             }
-            return count.ToString(); 
+            return count.ToString();
         }
 
-        protected override object SolvePartTwo() {
+        protected override object SolvePartTwo()
+        {
             var you = _tree["YOU"];
             var san = _tree["SAN"];
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-namespace AdventOfCode.Solutions.Year2018
+﻿namespace AdventOfCode.Solutions.Year2018
 {
     internal class Day20 : ASolution
     {

@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+namespace AdventOfCode.Solutions.Year2019
+{
 
-namespace AdventOfCode.Solutions.Year2019 {
-
-    class Day08 : ASolution {
+    class Day08 : ASolution
+    {
 
         private const int Rows = 6;
         private const int Cols = 25;
@@ -15,11 +13,13 @@ namespace AdventOfCode.Solutions.Year2019 {
         byte[,] _image;
 
         string test = "0222112222120000";
-        public Day08() : base(8, 2019, "") {
-            
+        public Day08() : base(8, 2019, "")
+        {
+
         }
 
-        protected override object SolvePartOne() {
+        protected override object SolvePartOne()
+        {
             _data = Input.SplitByNewline().First().ToCharArray().Select(f => (byte)(f - '0')).ToArray();
             _numLayers = _data.Length / (Rows * Cols);
             _layerLen = _data.Length / _numLayers;
@@ -42,10 +42,11 @@ namespace AdventOfCode.Solutions.Year2019 {
             int numOnes = layer.Count(b => b == 1);
             int numTwos = layer.Count(b => b == 2);
 
-            return (numOnes * numTwos).ToString(); 
+            return (numOnes * numTwos).ToString();
         }
 
-        protected override object SolvePartTwo() {
+        protected override object SolvePartTwo()
+        {
             _image = new byte[Rows, Cols];
             for (int row = 0; row < Rows; row++)
             {
@@ -73,7 +74,7 @@ namespace AdventOfCode.Solutions.Year2019 {
                     _ => throw new Exception(),
                 };
             });
-            return null; 
+            return null;
         }
     }
 }

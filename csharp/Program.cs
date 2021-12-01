@@ -1,17 +1,19 @@
 ﻿using AdventOfCode.Solutions;
-using System;
-using System.Collections.Generic;
 
-namespace AdventOfCode {
+namespace AdventOfCode
+{
 
-    class Program {
+    class Program
+    {
 
-        public static Config Config = Config.Get("config.json"); 
+        public static Config Config = Config.Get("config.json");
 
-        static void Main(string[] args) {
-            SolutionCollector Solutions = new SolutionCollector(Config.Year, new HashSet<int>(Config.Days)); 
+        static void Main(string[] args)
+        {
+            SolutionCollector Solutions = new SolutionCollector(Config.Year, new HashSet<int>(Config.Days));
 
-            foreach(ASolution solution in Solutions) {
+            foreach (ASolution solution in Solutions)
+            {
                 solution.Solve();
             }
         }

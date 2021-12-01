@@ -1,19 +1,22 @@
 #nullable enable
-using System.Linq;
 
-namespace AdventOfCode.Solutions.Year2019 {
+namespace AdventOfCode.Solutions.Year2019
+{
 
-    class Day04 : ASolution {
+    class Day04 : ASolution
+    {
         int low;
         int high;
 
-        public Day04() : base(4, 2019, "") {
+        public Day04() : base(4, 2019, "")
+        {
             int[] input = Input.Split('-').Select(int.Parse).ToArray();
             low = input[0];
             high = input[1];
         }
 
-        protected override object SolvePartOne() {
+        protected override object SolvePartOne()
+        {
             int valid = 0;
             for (int i = low; i <= high; i++)
             {
@@ -42,7 +45,8 @@ namespace AdventOfCode.Solutions.Year2019 {
             return valid.ToString();
         }
 
-        protected override object SolvePartTwo() {
+        protected override object SolvePartTwo()
+        {
             int valid = 0;
             for (int i = low; i <= high; i++)
             {

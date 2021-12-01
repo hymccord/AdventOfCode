@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdventOfCode.Solutions.Year2020.Day17
+﻿namespace AdventOfCode.Solutions.Year2020.Day17
 {
     class Day17 : ASolution
     {
@@ -104,7 +98,7 @@ namespace AdventOfCode.Solutions.Year2020.Day17
 
                                     var p = (cur.pW + w, cur.pX + x, cur.pY + y, cur.pZ + z);
 
-                                    activeNeigbors[p] = activeNeigbors.Get(p, 0) + 1; 
+                                    activeNeigbors[p] = activeNeigbors.Get(p, 0) + 1;
                                 }
                             }
                         }

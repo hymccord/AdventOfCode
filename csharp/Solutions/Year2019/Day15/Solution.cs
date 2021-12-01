@@ -1,24 +1,20 @@
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+namespace AdventOfCode.Solutions.Year2019
+{
 
-namespace AdventOfCode.Solutions.Year2019 {
-
-    class Day15 : ASolution {
+    class Day15 : ASolution
+    {
 
         private Dictionary<Point, char> grid = new Dictionary<Point, char>();
         private Dictionary<Point, long> stepsToPoint = new Dictionary<Point, long>();
         private HashSet<Point> processed = new HashSet<Point>();
 
-        public Day15() : base(15, 2019, "") {
-            
+        public Day15() : base(15, 2019, "")
+        {
+
         }
 
-        Queue<(Point,IntCode)> Q = new Queue<(Point,IntCode)>();
-        protected override object SolvePartOne() 
+        Queue<(Point, IntCode)> Q = new Queue<(Point, IntCode)>();
+        protected override object SolvePartOne()
         {
             processed.Add(new Point());
             stepsToPoint[new Point()] = 0;
@@ -66,13 +62,13 @@ namespace AdventOfCode.Solutions.Year2019 {
         private long RunPoint(IntCode clone, Point neighbor, Point p)
         {
             long ret = 0L;
-            clone.GetInput = (i) => 
+            clone.GetInput = (i) =>
             {
-                return (i & 1) == 0 
+                return (i & 1) == 0
                 ? DirToNum(neighbor, p)
                 : 0;
             };
-            clone.Output += (s, e) => 
+            clone.Output += (s, e) =>
             {
                 ret = e;
                 if (ret == 0)
@@ -96,7 +92,8 @@ namespace AdventOfCode.Solutions.Year2019 {
             return ret;
         }
 
-        protected override object SolvePartTwo() {
+        protected override object SolvePartTwo()
+        {
             int minX = grid.Min(kvp => kvp.Key.X);
             int minY = grid.Min(kvp => kvp.Key.Y);
             int maxX = grid.Max(kvp => kvp.Key.X);

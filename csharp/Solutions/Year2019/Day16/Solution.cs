@@ -1,15 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace AdventOfCode.Solutions.Year2019
+{
 
-namespace AdventOfCode.Solutions.Year2019 {
+    class Day16 : ASolution
+    {
 
-    class Day16 : ASolution {
-        
-        public Day16() : base(16, 2019, "") {
-            
+        public Day16() : base(16, 2019, "")
+        {
+
         }
 
         string test = "12345678";
@@ -19,7 +16,8 @@ namespace AdventOfCode.Solutions.Year2019 {
 
         int[] patten = new int[] { 0, 1, 0, -1 };
         int pattenLength = 4;
-        protected override object SolvePartOne() {
+        protected override object SolvePartOne()
+        {
             var arr = Input.SplitByNewline().First().ToCharArray().Select(c => (int)char.GetNumericValue(c)).ToArray();
             int[] nextRound = new int[arr.Length];
 
@@ -40,10 +38,11 @@ namespace AdventOfCode.Solutions.Year2019 {
                 });
                 nextRound.CopyTo(arr, 0);
             }
-            return arr.Take(8).JoinAsStrings(); 
+            return arr.Take(8).JoinAsStrings();
         }
 
-        protected override object SolvePartTwo() {
+        protected override object SolvePartTwo()
+        {
             var arr2 = Input.SplitByNewline().First().ToCharArray().Select(c => (int)char.GetNumericValue(c)).ToArray();
             var bigArr = Enumerable.Repeat(arr2, 10000).SelectMany(c => c).ToArray();
             int offset = int.Parse(arr2.Take(7).JoinAsStrings());

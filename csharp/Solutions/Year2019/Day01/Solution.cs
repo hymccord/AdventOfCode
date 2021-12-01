@@ -1,19 +1,21 @@
-using System.Collections.Generic;
-using System.Linq;
+namespace AdventOfCode.Solutions.Year2019
+{
 
-namespace AdventOfCode.Solutions.Year2019 {
+    class Day01 : ASolution
+    {
 
-    class Day01 : ASolution {
-        
-        public Day01() : base(1, 2019, "") {
-            
+        public Day01() : base(1, 2019, "")
+        {
+
         }
 
-        protected override object SolvePartOne() {
+        protected override object SolvePartOne()
+        {
             return Input.SplitByNewline().Select(int.Parse).Select(i => i / 3 - 2).Sum().ToString();
         }
 
-        protected override object SolvePartTwo() {
+        protected override object SolvePartTwo()
+        {
             int sum = 0;
             Stack<int> q = new Stack<int>(Input.SplitByNewline().Select(int.Parse));
 

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-namespace AdventOfCode.Solutions.Year2020.Day05
+﻿namespace AdventOfCode.Solutions.Year2020.Day05
 {
     class Day05 : ASolution
     {

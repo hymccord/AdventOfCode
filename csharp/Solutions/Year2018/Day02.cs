@@ -1,8 +1,4 @@
-﻿
-using System;
-using System.Linq;
-
-namespace AdventOfCode.Solutions.Year2018
+﻿namespace AdventOfCode.Solutions.Year2018
 {
     class Day2 : ASolution
     {
@@ -41,6 +37,6 @@ fguij
 axcye
 wvxyz";
 
-        
+
     }
 }

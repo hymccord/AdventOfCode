@@ -1,25 +1,24 @@
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+namespace AdventOfCode.Solutions.Year2019
+{
 
-namespace AdventOfCode.Solutions.Year2019 {
+    class Day11 : ASolution
+    {
 
-    class Day11 : ASolution {
-        
-        public Day11() : base(11, 2019, "") {
-            
+        public Day11() : base(11, 2019, "")
+        {
+
         }
 
 
-        protected override object SolvePartOne() {
+        protected override object SolvePartOne()
+        {
             var panels = new Dictionary<Point, long>();
             (Point location, Point direction) = (new Point(), Point.North);
             IntCode cpu = IntCode.Create(Input.SplitByNewline().First());
             cpu.GetInput = (i) =>
             {
-                return panels.TryGetValue(location, out var result) 
-                ? result 
+                return panels.TryGetValue(location, out var result)
+                ? result
                 : 0;
             };
             int output = 0;
@@ -40,10 +39,11 @@ namespace AdventOfCode.Solutions.Year2019 {
                 output = (output + 1) & 1;
             };
             cpu.Run();
-            return panels.Count.ToString(); 
+            return panels.Count.ToString();
         }
 
-        protected override object SolvePartTwo() {
+        protected override object SolvePartTwo()
+        {
             var panels = new Dictionary<Point, long>
             {
                 { new Point(), 1 },

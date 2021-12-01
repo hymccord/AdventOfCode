@@ -1,18 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+namespace AdventOfCode.Solutions.Year2019
+{
 
-namespace AdventOfCode.Solutions.Year2019 {
+    class Day13 : ASolution
+    {
 
-    class Day13 : ASolution {
-        
-        public Day13() : base(13, 2019, "") {
-            
+        public Day13() : base(13, 2019, "")
+        {
+
         }
 
-        protected override object SolvePartOne() {
-            IntCode cpu = IntCode.Create(Input.SplitByNewline().First());           
+        protected override object SolvePartOne()
+        {
+            IntCode cpu = IntCode.Create(Input.SplitByNewline().First());
             int i = 0;
             int blocks = 0;
             cpu.Output += (s, e) =>
@@ -36,7 +35,8 @@ namespace AdventOfCode.Solutions.Year2019 {
             e.ToString().ToCharArray();
         }
 
-        protected override object SolvePartTwo() {
+        protected override object SolvePartTwo()
+        {
             IntCode cpu = IntCode.Create(Input.SplitByNewline().First());
             cpu.ByteCode[0] = 2;
             var output = new List<long>();

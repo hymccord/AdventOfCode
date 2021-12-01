@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
+﻿
 using AdventofCode.ELF_Lang;
 
 namespace AdventOfCode.Solutions.Year2018
@@ -35,7 +32,7 @@ namespace AdventOfCode.Solutions.Year2018
                 CPU.Execute();
             }
             catch (Exception)
-            {}
+            { }
 
             return CPU.Register[0];
         }

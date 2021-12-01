@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdventOfCode.Solutions.Year2020.Day11
+﻿namespace AdventOfCode.Solutions.Year2020.Day11
 {
     class Day11 : ASolution
     {
@@ -110,7 +104,7 @@ L.LLLLL.LL";
                         {
                             Point offset = p + slope;
 
-                            while (offset.X >= 0 
+                            while (offset.X >= 0
                                 && offset.X < cols
                                 && offset.Y >= 0
                                 && offset.Y < rows

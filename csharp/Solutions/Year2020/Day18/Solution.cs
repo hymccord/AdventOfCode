@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-namespace AdventOfCode.Solutions.Year2020.Day18
+﻿namespace AdventOfCode.Solutions.Year2020.Day18
 {
     class Day18 : ASolution
     {
         private bool _plusPref = false;
         public Day18()
-            : base(18, 2020, "Operation Order") 
+            : base(18, 2020, "Operation Order")
         { }
 
         protected override object SolvePartOne()

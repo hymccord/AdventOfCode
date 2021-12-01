@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Numerics;
 
-namespace AdventOfCode.Solutions.Year2019 {
+namespace AdventOfCode.Solutions.Year2019
+{
 
-    class Day12 : ASolution {
+    class Day12 : ASolution
+    {
 
         string test = @"<x=-1, y=0, z=2>
 <x=2, y=-10, z=-7>
@@ -17,11 +16,13 @@ namespace AdventOfCode.Solutions.Year2019 {
 <x=2, y=-7, z=3>
 <x=9, y=-8, z=-3>";
         private List<Moon> _moons = new List<Moon>();
-        public Day12() : base(12, 2019, "") {
-            
+        public Day12() : base(12, 2019, "")
+        {
+
         }
 
-        protected override object SolvePartOne() {
+        protected override object SolvePartOne()
+        {
             ParseInput();
 
             for (int i = 0; i < 1000; i++)
@@ -29,11 +30,12 @@ namespace AdventOfCode.Solutions.Year2019 {
                 SimulateOneRound();
             }
 
-            return _moons.Sum(m => m.TotalEnergy).ToString(); 
+            return _moons.Sum(m => m.TotalEnergy).ToString();
         }
 
         private int currentSim = 0;
-        protected override object SolvePartTwo() {
+        protected override object SolvePartTwo()
+        {
             ParseInput();
 
             var xs = new HashSet<int>();
@@ -65,7 +67,7 @@ namespace AdventOfCode.Solutions.Year2019 {
         {
             ApplyGravity();
             ApplyVelocity();
-        }        
+        }
 
         private void ApplyGravity()
         {

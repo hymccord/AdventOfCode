@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdventOfCode.Solutions.Year2020.Day09
+﻿namespace AdventOfCode.Solutions.Year2020.Day09
 {
     class Day09 : ASolution
     {

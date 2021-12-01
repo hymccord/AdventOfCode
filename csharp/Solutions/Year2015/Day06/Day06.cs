@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Solutions.Year2015.Day06
 {
@@ -143,10 +138,10 @@ toggle 0,0 through 999,999
             foreach (var s in v)
             {
                 var a = s.Split(' ');
-                Action action = a[0] == "toggle" 
-                    ? Action.Toggle 
-                    : a[1] == "on" 
-                        ? Action.On 
+                Action action = a[0] == "toggle"
+                    ? Action.Toggle
+                    : a[1] == "on"
+                        ? Action.On
                         : Action.Off;
 
                 int[] x1y1 = a[a.Length - 3].Split(',').Select(int.Parse).ToArray();
