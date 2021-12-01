@@ -8,6 +8,9 @@ namespace AdventOfCode.Solutions.Year2019
         private int[] intInputs;
 
         public Day02() : base(2, 2019, "")
+        { }
+
+        protected override void Preprocess()
         {
             intInputs = Input.Split(',', System.StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
             //intInputs = test;

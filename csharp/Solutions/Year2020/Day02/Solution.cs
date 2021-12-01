@@ -6,6 +6,9 @@ namespace AdventOfCode.Solutions.Year2020
 
         public Day02() :
             base(2, 2020, "Password Philosophy")
+        { }
+
+        protected override void Preprocess()
         {
             _lines = Input.SplitByNewline().Select(s =>
             {

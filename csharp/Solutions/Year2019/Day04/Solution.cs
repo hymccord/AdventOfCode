@@ -9,6 +9,9 @@ namespace AdventOfCode.Solutions.Year2019
         int high;
 
         public Day04() : base(4, 2019, "")
+        { }
+
+        protected override void Preprocess()
         {
             int[] input = Input.Split('-').Select(int.Parse).ToArray();
             low = input[0];

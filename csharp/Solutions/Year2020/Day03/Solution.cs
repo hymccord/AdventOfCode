@@ -22,6 +22,9 @@
 ;
 
         public Day03() : base(3, 2020, "Toboggan Trajectory")
+        { }
+
+        protected override void Preprocess()
         {
             trees = Input.SplitByNewline().Select(s => s.ToCharArray()).ToArray();
             //trees = test.SplitByNewline().Select(s => s.ToCharArray()).ToArray();

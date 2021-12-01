@@ -2,17 +2,23 @@
 
 internal class Day01 : ASolution
 {
+    private int[] _ints;
+
     public Day01() : base(01, 2021)
     { }
 
+    protected override void Preprocess()
+    {
+        _ints = Input.ToIntArray();
+    }
+
     protected override object SolvePartOne()
     {
-        var ints = Input.ToIntArray();
         int c = 0;
 
-        for (int i = 1; i <= ints.Length - 1; i++)
+        for (int i = 1; i <= _ints.Length - 1; i++)
         {
-            if (ints[i] > ints[i - 1])
+            if (_ints[i] > _ints[i - 1])
             {
                 c++;
             }
@@ -23,14 +29,12 @@ internal class Day01 : ASolution
 
     protected override object SolvePartTwo()
     {
-        var ints = Input.ToIntArray();
-
         int previousWindow = int.MaxValue;
         int c = 0;
 
-        for (int i = 0; i <= ints.Length - 3; i++)
+        for (int i = 0; i <= _ints.Length - 3; i++)
         {
-            int currentWindow = ints[i..(i + 3)].Sum();
+            int currentWindow = _ints[i..(i + 3)].Sum();
             if (currentWindow > previousWindow)
                 c++;
 

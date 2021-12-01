@@ -8,6 +8,9 @@
 
         public Day05()
             : base(5, 2020, "Binary Boarding")
+        { }
+
+        protected override void Preprocess()
         {
             var encoding = Regex.Replace(Input, @"[FL]", "0");
             encoding = Regex.Replace(encoding, @"[BR]", "1");

@@ -66,6 +66,8 @@ namespace AdventOfCode.Solutions
 
             Console.WriteLine($"--- Day {Day}: {Title} ---");
 
+            Preprocess();
+
             if (part != 2)
             {
                 Console.WriteLine($"Part 1: {(!string.IsNullOrEmpty(Part1) ? Part1 : "Unsolved")}");
@@ -125,6 +127,8 @@ namespace AdventOfCode.Solutions
             }
             return input;
         }
+
+        protected virtual void Preprocess() { }
 
         protected abstract object SolvePartOne();
         protected abstract object SolvePartTwo();

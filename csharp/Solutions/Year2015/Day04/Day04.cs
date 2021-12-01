@@ -10,6 +10,9 @@ namespace AdventOfCode.Solutions.Year2015
     {
         private string s;
         public Day04() : base(4, 2015, "")
+        { }
+
+        protected override void Preprocess()
         {
             s = Input.SplitByNewline().First();
         }

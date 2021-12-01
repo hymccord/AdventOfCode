@@ -6,6 +6,9 @@
 
         public Day04() :
             base(4, 2020, "Passport Processing")
+        { }
+
+        protected override void Preprocess()
         {
             // Split by empty line
             var passportLines = Input.Split(new[] { "\r\n\r\n", "\n\n" }, StringSplitOptions.None)
