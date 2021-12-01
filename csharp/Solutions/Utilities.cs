@@ -43,11 +43,7 @@ namespace AdventOfCode.Solutions {
             }
         }
 
-        public static string JoinAsStrings<T>(this IEnumerable<T> items) {
-            return string.Join("", items);
-        }
-
-        public static string JoinAsStrings<T>(this IEnumerable<T> items, string separator)
+        public static string JoinAsStrings<T>(this IEnumerable<T> items, string separator = "")
         {
             return string.Join(separator, items);
         }

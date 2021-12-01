@@ -33,6 +33,7 @@ namespace AdventOfCode.Solutions
         public int Year { get; }
         public string Title { get; }
         public string Input => string.IsNullOrEmpty(_input.Value) ? null : _input.Value;
+        public string[] InputByNewLine => Input?.SplitByNewline();
         public string Part1 => $"{_part1.Value ?? ""}";
         public string Part2 => $"{_part2.Value ?? ""}";
         protected bool DebugOutput { get; set; } = false;

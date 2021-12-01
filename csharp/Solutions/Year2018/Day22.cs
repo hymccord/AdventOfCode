@@ -210,23 +210,18 @@ namespace AdventOfCode.Solutions.Year2018
                     case Region.Rocky when toRegion == Region.Wet:
                         _pointTools[to] = Tool.ClimbingGear;
                         return;
-                        break;
                     case Region.Wet when toRegion == Region.Narrow:
                         _pointTools[to] = Tool.Neither;
                         return;
-                        break;
                     case Region.Wet when toRegion == Region.Rocky:
                         _pointTools[to] = Tool.ClimbingGear;
                         return;
-                        break;
                     case Region.Narrow when toRegion == Region.Wet:
                         _pointTools[to] = Tool.Neither;
                         return;
-                        break;
                     case Region.Narrow when toRegion == Region.Rocky:
                         _pointTools[to] = Tool.Torch;
                         return;
-                        break;
                 }
                 _pointTools[to] = _pointTools[from];
             }
