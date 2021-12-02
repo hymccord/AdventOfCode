@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Diagnostics;
 using System.Net;
 
@@ -18,9 +18,9 @@ namespace AdventOfCode.Solutions
     }
     abstract class ASolution : ISolution
     {
-
-        Lazy<string> _input;
-        Lazy<object> _part1, _part2;
+        readonly bool _debugInput;
+        readonly Lazy<string> _input;
+        readonly Lazy<object> _part1, _part2;
 #if RELEASE
         TimeSpan _perf1, _perf2;
 #endif
@@ -28,17 +28,21 @@ namespace AdventOfCode.Solutions
         public int Day { get; }
         public int Year { get; }
         public string Title { get; }
+
+
         public string Input => string.IsNullOrEmpty(_input.Value) ? null : _input.Value;
         public string[] InputByNewLine => Input?.SplitByNewline();
         public string Part1 => $"{_part1.Value ?? ""}";
         public string Part2 => $"{_part2.Value ?? ""}";
         protected bool DebugOutput { get; set; } = false;
 
-        private protected ASolution(int day, int year, string title = "")
+        private protected ASolution(int day, int year, string title = "", bool debug = false)
         {
             Day = day;
             Year = year;
             Title = title;
+            _debugInput = debug;
+
             _input = new Lazy<string>(() => LoadInput());
             _part1 = new Lazy<object>(() =>
             {
@@ -125,8 +129,16 @@ namespace AdventOfCode.Solutions
                     }
                 }
             }
+
+            if (_debugInput)
+            {
+                return LoadDebugInput();
+            }
+
             return input;
         }
+
+        protected virtual string LoadDebugInput() => string.Empty;
 
         protected virtual void Preprocess() { }
 
@@ -374,8 +386,8 @@ namespace AdventOfCode.Solutions
         [DebuggerDisplay("{Value}")]
         public class TreeNode<T> : IEnumerable<TreeNode<T>>, IEnumerable
         {
-            private T _value;
-            private HashSet<TreeNode<T>> _children = new();
+            private readonly T _value;
+            private readonly HashSet<TreeNode<T>> _children = new();
 
             public TreeNode(T value)
             {
