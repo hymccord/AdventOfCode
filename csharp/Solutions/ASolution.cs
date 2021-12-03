@@ -20,6 +20,7 @@ namespace AdventOfCode.Solutions
     {
         readonly bool _debugInput;
         readonly Lazy<string> _input;
+        readonly Lazy<string[]> _inputByNewLine;
         readonly Lazy<object> _part1, _part2;
 #if RELEASE
         TimeSpan _perf1, _perf2;
@@ -31,7 +32,7 @@ namespace AdventOfCode.Solutions
 
 
         public string Input => string.IsNullOrEmpty(_input.Value) ? null : _input.Value;
-        public string[] InputByNewLine => Input?.SplitByNewline();
+        public string[] InputByNewLine => string.IsNullOrEmpty(_input.Value) ? null : _inputByNewLine.Value;
         public string Part1 => $"{_part1.Value ?? ""}";
         public string Part2 => $"{_part2.Value ?? ""}";
         protected bool DebugOutput { get; set; } = false;
@@ -44,6 +45,7 @@ namespace AdventOfCode.Solutions
             _debugInput = debug;
 
             _input = new Lazy<string>(() => LoadInput());
+            _inputByNewLine = new Lazy<string[]>(() => Input.SplitByNewline());
             _part1 = new Lazy<object>(() =>
             {
                 var watch = Stopwatch.StartNew();
