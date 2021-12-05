@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 using Microsoft.Win32.SafeHandles;
@@ -155,9 +156,10 @@ namespace AdventOfCode.Solutions
             }
         }
 
+#nullable enable
         [DebuggerStepThrough]
         [DebuggerDisplay("{X}, {Y}")]
-        public struct Point
+        public struct Point : IEquatable<Point>
         {
             public int X;
             public int Y;
@@ -233,6 +235,15 @@ namespace AdventOfCode.Solutions
             public void Deconstruct(out int x, out int y) =>
                 (x, y) = (X, Y);
 
+            public override readonly bool Equals([NotNullWhen(true)] object? obj) => obj is Point point && Equals(point);
+
+            public readonly bool Equals(Point other) => this == other;
+
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(X, Y);
+            }
+
             public override string ToString()
             {
                 return $"{X}, {Y}";
@@ -274,7 +285,7 @@ namespace AdventOfCode.Solutions
             public static Point South = new(0, 1);
             public static Point West = new(-1, 0);
         }
-
+#nullable restore
 
         protected void WriteConsole(int rows, int cols, short left, short top, Func<int, int, (ConsoleColor, char)> indexingFunc)
         {
