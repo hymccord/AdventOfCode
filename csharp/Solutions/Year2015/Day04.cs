@@ -8,6 +8,8 @@ namespace AdventOfCode.Solutions.Year2015
 {
     class Day04 : ASolution
     {
+        // TODO: Reimplement as part 2 isn't very parallel
+
         private string s;
         public Day04() : base(4, 2015, "")
         { }
@@ -20,48 +22,29 @@ namespace AdventOfCode.Solutions.Year2015
         protected override object SolvePartOne()
         {
             long seed = 0;
-            var s = Stopwatch.StartNew();
-            //Compute(new ParallelOptions(),
-            //s => s.StartsWith("00000"),
-            //AdventCoinString,
-            //x => seed = x);
-            //Console.WriteLine(seed);
-            //Console.WriteLine(s.ElapsedMilliseconds);
-            //seed = 0;
-            //s.Restart();
-            Compute(new ParallelOptions(),
-            b => b[0] == 0 && b[1] == 0 && b[2] >> 4 == 0,
-            AdventCoin,
-            x => seed = x);
-            //Console.WriteLine(seed);
-            Console.WriteLine(s.ElapsedMilliseconds);
-            return seed.ToString();
+
+            Compute(new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount },
+                condition: b => b[0] == 0 && b[1] == 0 && b[2] >> 4 == 0,
+                body: AdventCoin,
+                complete: x => seed = x);
+
+            return seed;
         }
 
         protected override object SolvePartTwo()
         {
             long seed = 0;
-            var s = Stopwatch.StartNew();
-            //Compute(new ParallelOptions(),
-            //s => s.StartsWith("000000"),
-            //AdventCoinString,
-            //x => seed = x);
-            //Console.WriteLine(seed);
-            //Console.WriteLine(s.ElapsedMilliseconds);
-            //seed = 0;
-            //s.Restart();
-            Compute(new ParallelOptions(),
-            b => b[0] == 0 && b[1] == 0 && b[2] == 0,
-            AdventCoin,
-            x => seed = x);
-            //Console.WriteLine(seed);
-            Console.WriteLine(s.ElapsedMilliseconds);
-            return seed.ToString();
+
+            Compute(new ParallelOptions() {  MaxDegreeOfParallelism = Environment.ProcessorCount },
+                condition: b => b[0] == 0 && b[1] == 0 && b[2] == 0,
+                body: AdventCoin,
+                complete: x => seed = x);
+
+            return seed;
         }
 
         private byte[] AdventCoin(long counter, ParallelLoopState loopState)
         {
-            var sb = new StringBuilder();
             using var md5 = MD5.Create();
             return md5.ComputeHash(Encoding.ASCII.GetBytes($"{s}{counter}"));
         }

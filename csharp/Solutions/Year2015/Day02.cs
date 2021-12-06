@@ -2,7 +2,7 @@
 {
     class Day02 : ASolution
     {
-        public Day02() : base(2, 2015, "")
+        public Day02() : base(2, 2015, "I Was Told There Would Be No Math")
         {
 
         }
