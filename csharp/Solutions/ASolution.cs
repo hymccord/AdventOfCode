@@ -164,6 +164,9 @@ namespace AdventOfCode.Solutions
             public int X;
             public int Y;
 
+            /// <summary>
+            /// Get NSEW points.
+            /// </summary>
             public IEnumerable<Point> Neighbors
             {
                 get
@@ -175,6 +178,9 @@ namespace AdventOfCode.Solutions
                 }
             }
 
+            /// <summary>
+            /// Get all 8 surrounding points.
+            /// </summary>
             public IEnumerable<Point> SplattNeighbors
             {
                 get
@@ -234,6 +240,8 @@ namespace AdventOfCode.Solutions
 
             public void Deconstruct(out int x, out int y) =>
                 (x, y) = (X, Y);
+
+            public bool IsInBoundsOfArray(int rows, int cols) => X >= 0 && Y >= 0 && X < cols && Y < rows;
 
             public override readonly bool Equals([NotNullWhen(true)] object? obj) => obj is Point point && Equals(point);
 
