@@ -44,8 +44,7 @@
             {
                 bool valid = true;
                 Stack<char> s = new();
-                s.Push(line[0]);
-                foreach (char c in line[1..])
+                foreach (char c in line)
                 {
                     if (_openToClose.ContainsKey(c))
                     {
