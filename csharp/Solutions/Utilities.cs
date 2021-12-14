@@ -212,5 +212,17 @@ namespace AdventOfCode.Solutions
                 yield return arr[i, column];
             }
         }
+
+        public static void AddOrUpdate<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, TValue value, Func<TKey, TValue, TValue> updateExisting)
+        {
+            if (dict.TryGetValue(key, out TValue existing))
+            {
+                dict[key] = updateExisting(key, existing);
+            }
+            else
+            {
+                dict.Add(key, value);
+            }
+        }
     }
 }
