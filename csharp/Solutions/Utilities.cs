@@ -23,6 +23,13 @@ namespace AdventOfCode.Solutions
                 .Select(n => Convert.ToInt32(n))
                 .ToArray();
 
+        public static int[,] To2DIntArray(this string str)
+            => str
+            .SplitByNewline()
+            .Select(s => s.ToCharArray().Select(c => c - '0').ToArray())
+            .ToArray()
+            .To2D();
+
         public static int MinOfMany(params int[] items)
         {
             var result = items[0];
