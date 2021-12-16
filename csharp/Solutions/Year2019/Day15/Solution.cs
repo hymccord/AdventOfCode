@@ -113,7 +113,7 @@ namespace AdventOfCode.Solutions.Year2019
                 .Max(kvp => aStar.A_Star(
                     start: new Point(goal.X - minX, goal.Y - minY),
                     goal: new Point(kvp.Key.X - minX, kvp.Key.Y - minY),
-                    h: (p1, p2) => 0).Count);
+                    heuristic: (p1, p2) => 0).Count);
 #if false
             var longestPath = grid.Where(kvp => kvp.Value == '.').AsParallel()
                 .Select(kvp => new

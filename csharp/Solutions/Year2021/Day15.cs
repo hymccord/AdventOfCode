@@ -46,7 +46,8 @@
             var wg = new ChitonCave(_risk);
             var aStar = new AStar<int>(wg);
 
-            var l = aStar.A_Star(new Point(0, 0), new Point(_rows - 1, _cols - 1), (f, t) => 0);
+            var l = aStar.A_Star(new Point(0, 0), new Point(_rows - 1, _cols - 1),
+                heuristic: (goal, next) => next.Manhatten(goal));
 
             //DebugPrint(_risk, l);
 
@@ -58,7 +59,8 @@
             var wg = new ChitonCave(_bigRisk);
             var aStar = new AStar<int>(wg);
 
-            var l = aStar.A_Star(new Point(0, 0), new Point((_rows * 5) - 1, (_cols * 5) - 1), (f, t) => 0);
+            var l = aStar.A_Star(new Point(0, 0), new Point((_rows * 5) - 1, (_cols * 5) - 1),
+                heuristic: (goal, next) => next.Manhatten(goal));
 
             //DebugPrint(_bigRisk, l);
 

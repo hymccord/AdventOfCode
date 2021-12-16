@@ -498,54 +498,46 @@ namespace AdventOfCode.Solutions
                 return totalPath;
             }
 
-            public List<Point> A_Star(Point start, Point goal, Func<Point, Point, int> h)
-            {
-                SortedList<double, Point> frontier = new(new DuplicateKeyComparer<double>());
-                HashSet<Point> visited = new();
-                Dictionary<Point, double> costSoFar = new() { { start, 0 } };
-                Dictionary<Point, Point> cameFrom = new();
-                frontier.Add(0, start);
+            public ICollection<Point> Dijkstra(Point start, Point goal)
+                => A_Star(start, goal, (goal, next) => 0);
 
-                while (!(frontier.Count == 0))
+            public List<Point> A_Star(Point start, Point goal, Func<Point, Point, int> heuristic)
+            {
+                var frontier = new PriorityQueue<Point, double>();
+
+                var gScore = new Dictionary<Point, double>();
+                gScore.Add(start, 0);
+
+                var cameFrom = new Dictionary<Point, Point>();
+
+                frontier.Enqueue(start, heuristic(goal, start));
+
+                while (frontier.Count > 0)
                 {
-                    Point current = frontier.Values[0];
+                    Point current = frontier.Dequeue();
 
                     if (current == goal)
                         return ReconstructPath(cameFrom, current);
 
-                    frontier.RemoveAt(0);
-                    visited.Add(current);
-
-                    foreach (Point next in current.Neighbors)
+                    foreach (Point neighbor in _grid.GetNeighbors(current))
                     {
-                        if (next.X < 0 || next.Y < 0 || next.X >= _grid.Width || next.Y >= _grid.Height)
+                        if (!neighbor.IsInBoundsOfArray(_grid.Height, _grid.Width))
                             continue;
-                        var newCost = costSoFar[current] + _grid.Cost(current, next);
-                        if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
+
+                        var tentativeScore = gScore[current] + _grid.Cost(current, neighbor);
+                        if (tentativeScore < gScore.GetValueOrDefault(neighbor, double.MaxValue))
                         {
-                            _grid.EnterLoc(current, next);
-                            costSoFar[next] = newCost;
-                            double priority = newCost + h(goal, next);
-                            frontier.Add(priority, next);
-                            cameFrom[next] = current;
+                            _grid.EnterLoc(current, neighbor);
+
+                            cameFrom[neighbor] = current;
+                            gScore[neighbor] = tentativeScore;
+                            double priority = tentativeScore + heuristic(goal, neighbor);
+                            frontier.Enqueue(neighbor, priority);
                         }
                     }
                 }
 
-                return null;
-            }
-
-            private class DuplicateKeyComparer<TKey>
-                : IComparer<TKey> where TKey : IComparable
-            {
-                public int Compare(TKey x, TKey y)
-                {
-                    int result = x.CompareTo(y);
-                    if (result == 0)
-                        return 1;
-
-                    return result;
-                }
+                throw new InvalidOperationException("Could not find path between start and goal");
             }
         }
 
@@ -565,6 +557,14 @@ namespace AdventOfCode.Solutions
 
             internal abstract double Cost(Point from, Point to);
             internal virtual void EnterLoc(Point from, Point to) { }
+
+            /// <summary>
+            /// Customize getting neigbors. Defaults to cardinal only.
+            /// </summary>
+            internal virtual IEnumerable<Point> GetNeighbors(Point p)
+            {
+                return p.Neighbors;
+            }
         }
     }
 }
