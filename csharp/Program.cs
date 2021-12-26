@@ -10,9 +10,14 @@ namespace AdventOfCode
 
         static void Main(string[] args)
         {
-            SolutionCollector Solutions = new SolutionCollector(Config.Year, new HashSet<int>(Config.Days));
+            var solutions = new SolutionCollector(Config.Year, new HashSet<int>(Config.Days));
 
-            foreach (ASolution solution in Solutions)
+            if (!solutions.Any())
+            {
+                Console.WriteLine("Nothing found to run.");
+            }
+
+            foreach (ASolution solution in solutions)
             {
                 solution.Solve();
             }
