@@ -45,7 +45,7 @@ namespace AdventOfCode.Solutions
             Title = title;
             _debugInput = debug;
 
-            _input = new Lazy<string>(() => LoadInput());
+            _input = new Lazy<string>(() => LoadInputAsync().Result);
             _inputByNewLine = new Lazy<string[]>(() => Input.SplitByNewline());
             _part1 = new Lazy<object>(() =>
             {
@@ -91,7 +91,7 @@ namespace AdventOfCode.Solutions
             }
         }
 
-        string LoadInput()
+        async Task<string> LoadInputAsync()
         {
             string INPUT_FILEPATH = $"Solutions/Year{Year}/Day{Day:D2}input";
             string INPUT_FILEPATH_ALTERNATE = $"Solutions/Year{Year}/Day{Day:D2}/input";
@@ -108,28 +108,25 @@ namespace AdventOfCode.Solutions
             }
             else
             {
-                try
+                using var client = new HttpClient();
+                client.DefaultRequestHeaders.Add("Cookie", $"session={Program.Config.Session}");
+                var response = await client.GetAsync(INPUT_URL);
+
+                switch (response.StatusCode)
                 {
-                    using var client = new WebClient();
-                    client.Headers.Add(HttpRequestHeader.Cookie, Program.Config.Cookie);
-                    input = client.DownloadString(INPUT_URL).Trim();
-                    File.WriteAllText(INPUT_FILEPATH, input);
-                }
-                catch (WebException e)
-                {
-                    var statusCode = ((HttpWebResponse)e.Response).StatusCode;
-                    if (statusCode == HttpStatusCode.BadRequest)
-                    {
+                    case HttpStatusCode.OK:
+                        input = await response.Content.ReadAsStringAsync();
+                        _ = File.WriteAllTextAsync(INPUT_FILEPATH, input);
+                        break;
+                    case HttpStatusCode.BadRequest:
                         Console.WriteLine($"Day {Day}: Error code 400 when attempting to retrieve puzzle input through the web client. Your session cookie is probably not recognized.");
-                    }
-                    else if (statusCode == HttpStatusCode.NotFound)
-                    {
+                        break;
+                    case HttpStatusCode.NotFound:
                         Console.WriteLine($"Day {Day}: Error code 404 when attempting to retrieve puzzle input through the web client. The puzzle is probably not available yet.");
-                    }
-                    else
-                    {
-                        Console.WriteLine(e.Status);
-                    }
+                        break;
+                    default:
+                        await Console.Out.WriteLineAsync($"Day {Day}: Error code {response.StatusCode}.");
+                        break;
                 }
             }
 
