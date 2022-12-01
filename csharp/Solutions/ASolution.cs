@@ -110,6 +110,8 @@ namespace AdventOfCode.Solutions
             {
                 using var client = new HttpClient();
                 client.DefaultRequestHeaders.Add("Cookie", $"session={Program.Config.Session}");
+                // https://www.reddit.com/r/adventofcode/comments/z9dhtd/please_include_your_contact_info_in_the_useragent/
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("github.com/hymccord/adventofcode by hymccord@gmail.com");
                 var response = await client.GetAsync(INPUT_URL);
 
                 switch (response.StatusCode)
