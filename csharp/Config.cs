@@ -2,20 +2,19 @@
 
 namespace AdventOfCode
 {
-
-    class Config
+    partial class Config
     {
 
         string _c;
         int _y;
         int[] _d;
 
-        public string Cookie
+        public string Session
         {
             get => _c;
             set
             {
-                if (Regex.IsMatch(value, "^session=[a-z0-9]+$"))
+                if (AoCSessionRegex().IsMatch(value))
                 {
                     _c = value;
                 }
@@ -80,16 +79,19 @@ namespace AdventOfCode
             {
                 config = new Config();
                 config.setDefaults();
-                File.WriteAllText(path, JsonSerializer.Serialize<Config>(config, options));
+                File.WriteAllText(path, JsonSerializer.Serialize(config, options));
             }
             return config;
         }
 
         void setDefaults()
         {
-            Cookie = "";
+            Session = "";
             Year = DateTime.Now.Year;
-            Days = (DateTime.Now.Month == 12) ? new int[] { DateTime.Now.Day } : new int[] { 0 };
+            Days = DateTime.Now.Month == 12 ? new int[] { DateTime.Now.Day } : new int[] { 0 };
         }
+
+        [GeneratedRegex("^[a-z0-9]+$")]
+        private static partial Regex AoCSessionRegex();
     }
 }
