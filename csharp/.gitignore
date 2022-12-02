@@ -338,6 +338,6 @@ ASALocalRun/
 *.code-workspace
 
 # Local configuration
-config.json
 Solutions/Year*/Day*/input
 Solutions/Year*/Day*input
+appsettings.local.json

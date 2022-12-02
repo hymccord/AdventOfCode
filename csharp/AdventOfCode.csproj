@@ -5,21 +5,25 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>11</LangVersion>
+    <UserSecretsId>45a9d76d-4f08-4551-b0ed-08e4751c6bc3</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="config.json">
+    <None Update="appsettings.local.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
     <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.2.158-beta">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Composition" Version="7.0.0" />
-    <PackageReference Include="System.Composition.Convention" Version="7.0.0" />
+    <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
   </ItemGroup>
 
 </Project>

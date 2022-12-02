@@ -1,26 +1,28 @@
-﻿using AdventOfCode.Solutions;
+﻿using AdventOfCode;
+using AdventOfCode.Options;
+using AdventOfCode.Solutions;
 
-namespace AdventOfCode
-{
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-    class Program
+Host.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((context, config)=>
     {
+        config.AddUserSecrets<Program>();
+        config.AddJsonFile("appsettings.local.json");
+    })
+    .ConfigureServices((context, services) =>
+    {
+        services.AddSingleton<ISolutionCollector, SolutionCollector>();
+        services.AddHostedService<ConsoleRunner>();
 
-        public static Config Config = Config.Get("config.json");
-
-        static void Main(string[] args)
-        {
-            var solutions = new SolutionCollector(Config.Year, new HashSet<int>(Config.Days));
-
-            if (!solutions.Any())
-            {
-                Console.WriteLine("Nothing found to run.");
-            }
-
-            foreach (ASolution solution in solutions)
-            {
-                solution.Solve();
-            }
-        }
-    }
-}
+        services.Configure<Config>(context.Configuration.GetSection(nameof(Config)));
+        services.Configure<Session>(options => options.Token = context.Configuration.GetValue<string>("session"));
+    })
+    .UseConsoleLifetime(options =>
+    {
+        options.SuppressStatusMessages = true;
+    })
+    .Build()
+    .RunAsync();

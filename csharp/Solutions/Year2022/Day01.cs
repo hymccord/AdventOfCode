@@ -6,7 +6,7 @@ internal class Day01 : ASolution
 
     public Day01() : base(1, 2022, "Calorie Counting", false)
     {
-        _nums = new(Input.SplitByBlankLine().Select(s => s.ToIntArray().Sum()).ToArray());
+        _nums = new(() => Input.SplitByBlankLine().Select(s => s.ToIntArray().Sum()).ToArray());
     }
 
     protected override object SolvePartOne()

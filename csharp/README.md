@@ -1,5 +1,5 @@
 # AdventOfCodeBase
-A basic C# program for Advent of Code, retrieving puzzle inputs on the go and creating instances of solutions as they are created. It runs on .NET Core 3.0 and can be built easily in Visual Studio Code or Visual Studio. 
+A basic C# program for Advent of Code, retrieving puzzle inputs on the go and creating instances of solutions as they are created. It runs on .NET 7.0 and can be built easily in Visual Studio Code or Visual Studio. 
 
 #### Build & Run
 ```
@@ -7,18 +7,37 @@ A basic C# program for Advent of Code, retrieving puzzle inputs on the go and cr
 > dotnet run
 ```
 
-#### Configuration (Config.cs => config.json)
-Program.cs assumes that the root folder contains a config.json file and passes this path to Config.cs where it should be deserialized as a Config object. The .json should look more or less like the following. 
-```
+#### Configuration
+The local appsettings will be used to configure what solutions will run.  
+Make a copy of appsettings.json and rename it to `appsettings.local.json`.  
+Any changes to apsettings.local.json will be ignored by git.
+```json
 {
-  "cookie": "session=c0nt3nt", 
-  // Valid cookie content required to retrieve puzzle input from adventofcode.com with ASolution.LoadInput(). 
-  
-  "year": 2019,
-  // Simple int value representing year to pull puzzles from. Used for folder navigation and puzzle input retrieval. 
-
-  "days": [0] 
-  // int[] representing days of which to collect solutions. 0 resolves to "all". 
+  "Config": {
+    // Simple int value representing year to pull puzzles from. Used for folder navigation and puzzle input retrieval. 
+    "year": 2022,
+    // int[] representing days of which to collect solutions. 0 resolves to "all". 
+    "days": []
+  }
 }
 ```
-If no config.json exists, one is created automatically with an empty string as the cookie value. 
+
+#### Secrets
+Because inputs are retrieved automatically, you must setup the setup the sensitive data using `dotnet user-secrets`.
+
+The value you need to retreive is from the Advent of Code website. Using the developer tools, copy the `session` cookie value located in the "Storage" tab.
+
+Run the following in the project directory
+```
+> dotnet user-secrets init
+> dotnet user-secrets set "session" "<COOKIE_VALUE>"
+```
+
+You can also right click the project and select "Manage User Secrets".  
+The secrets.json should look like this:
+
+```json
+{
+  "session": "<COOKIE_VALUE>"
+}
+```

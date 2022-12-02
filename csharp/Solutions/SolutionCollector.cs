@@ -1,72 +1,52 @@
 ﻿using System.Collections;
-using System.Composition.Convention;
-using System.Composition.Hosting;
+//using System.Composition.Convention;
+//using System.Composition.Hosting;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+
+using Microsoft.Extensions.Options;
 
 namespace AdventOfCode.Solutions
 {
-
-    class SolutionCollector : IEnumerable<ISolution>
+    internal interface ISolutionCollector
     {
+        IEnumerable<ISolution> GetSolutions();
+    }
+    class SolutionCollector : ISolutionCollector
+    {
+        private readonly IOptions<Config> _config;
 
-        IEnumerable<ISolution> Solutions;
-
-        public SolutionCollector(int year, HashSet<int> days) => Solutions = LoadSolutions(year, days);
-
-        public ISolution GetSolution(int day)
+        public SolutionCollector(IOptions<Config> config)
         {
-            try
-            {
-                return Solutions.Single(s => s.Day == day);
-            }
-            catch (InvalidOperationException)
-            {
-                return null;
-            }
+            _config = config;
         }
 
-        public IEnumerator<ISolution> GetEnumerator()
+        public IEnumerable<ISolution> GetSolutions()
         {
-            return Solutions.GetEnumerator();
-        }
+            var allSolutions = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => !t.IsAbstract && t.IsAssignableTo(typeof(ISolution)))
+                .Select(Activator.CreateInstance)
+                .Cast<ISolution>();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        IEnumerable<ISolution> LoadSolutions(int year, HashSet<int> days)
-        {
-
-            var conventions = new ConventionBuilder();
-            conventions.ForTypesDerivedFrom<ISolution>().ExportInterfaces();
-
-            var configuration = new ContainerConfiguration()
-                .WithAssembly(Assembly.GetExecutingAssembly(), conventions);
-
-            using var container = configuration.CreateContainer();
-            var e = container.GetExports<ISolution>()
-                .Where(FilterOnDay)
-                .OrderBy(i => i.Day);
-
-
-            bool FilterOnDay(ISolution solution)
+            IEnumerable<ISolution> filteredSolutions = allSolutions;
+            if (_config.Value.Year is int year)
             {
-                if (solution.Year != year)
-                {
-                    return false;
-                }
-
-                if (days.Count == 0)
-                {
-                    return solution.Day == DateTime.Now.Day;
-                }
-
-                return days.Contains(solution.Day);
+                filteredSolutions = filteredSolutions.Where(s => s.Year == year);
             }
 
-            return e;
+            if (_config.Value.Days is int[] days && days.Length > 0)
+            {
+                var set = new HashSet<int>(days);
+                filteredSolutions = filteredSolutions.Where(s => set.Contains(s.Day));
+            }
+            else
+            {
+                filteredSolutions = filteredSolutions.Where(s => s.Day == DateTime.Now.Day);
+            }
+
+            return filteredSolutions;
         }
     }
 }

@@ -4,26 +4,9 @@ namespace AdventOfCode
 {
     partial class Config
     {
-
-        string _c;
         int _y;
         int[] _d;
 
-        public string Session
-        {
-            get => _c;
-            set
-            {
-                if (AoCSessionRegex().IsMatch(value))
-                {
-                    _c = value;
-                }
-                else
-                {
-                    _c = "";
-                }
-            }
-        }
         public int Year
         {
             get => _y;
@@ -86,12 +69,8 @@ namespace AdventOfCode
 
         void setDefaults()
         {
-            Session = "";
             Year = DateTime.Now.Year;
             Days = DateTime.Now.Month == 12 ? new int[] { DateTime.Now.Day } : new int[] { 0 };
         }
-
-        [GeneratedRegex("^[a-z0-9]+$")]
-        private static partial Regex AoCSessionRegex();
     }
 }

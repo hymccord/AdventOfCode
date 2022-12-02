@@ -3,7 +3,13 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
+using AdventOfCode.Options;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.Win32.SafeHandles;
+
+using Nito.AsyncEx;
 
 using Windows.Win32;
 using Windows.Win32.System.Console;
@@ -16,11 +22,13 @@ namespace AdventOfCode.Solutions
         int Day { get; }
         int Year { get; }
         string Title { get; }
+
+        Task RunAsync(IOptions<Session> session, CancellationToken cancellationToken);
     }
     abstract class ASolution : ISolution
     {
+        AsyncLazy<string> _input;
         readonly bool _debugInput;
-        readonly Lazy<string> _input;
         readonly Lazy<string[]> _inputByNewLine;
         readonly Lazy<object> _part1, _part2;
 #if RELEASE
@@ -32,8 +40,8 @@ namespace AdventOfCode.Solutions
         public string Title { get; }
 
 
-        public string Input => string.IsNullOrEmpty(_input.Value) ? null : _input.Value;
-        public string[] InputByNewLine => string.IsNullOrEmpty(_input.Value) ? null : _inputByNewLine.Value;
+        public string Input => string.IsNullOrEmpty(_input.Task.Result) ? null : _input.Task.Result;
+        public string[] InputByNewLine => string.IsNullOrEmpty(_input.Task.Result) ? null : _inputByNewLine.Value;
         public string Part1 => $"{_part1.Value ?? ""}";
         public string Part2 => $"{_part2.Value ?? ""}";
         protected bool DebugOutput { get; set; } = false;
@@ -45,7 +53,6 @@ namespace AdventOfCode.Solutions
             Title = title;
             _debugInput = debug;
 
-            _input = new Lazy<string>(() => LoadInputAsync().Result);
             _inputByNewLine = new Lazy<string[]>(() => Input.SplitByNewline());
             _part1 = new Lazy<object>(() =>
             {
@@ -67,9 +74,18 @@ namespace AdventOfCode.Solutions
             });
         }
 
-        public void Solve(int part = 0)
+        public async Task RunAsync(IOptions<Session> config, CancellationToken cancellationToken)
         {
-            if (Input == null) return;
+            _input = new AsyncLazy<string>(() => LoadInputAsync(config));
+            await Solve(0, cancellationToken);
+        }
+
+        public Task Solve(int part = 0, CancellationToken cancellation = default)
+        {
+            if (Input == null)
+            {
+                return Task.CompletedTask;
+            }
 
             Console.WriteLine($"--- Day {Day}: {Title} ---");
 
@@ -89,9 +105,11 @@ namespace AdventOfCode.Solutions
                 Console.WriteLine($"  (in {_perf2:ss\\.fffff}s)");
 #endif
             }
+
+            return Task.CompletedTask;
         }
 
-        async Task<string> LoadInputAsync()
+        async Task<string> LoadInputAsync(IOptions<Session> session)
         {
             string INPUT_FILEPATH = $"Solutions/Year{Year}/Day{Day:D2}input";
             string INPUT_FILEPATH_ALTERNATE = $"Solutions/Year{Year}/Day{Day:D2}/input";
@@ -109,9 +127,9 @@ namespace AdventOfCode.Solutions
             else
             {
                 using var client = new HttpClient();
-                client.DefaultRequestHeaders.Add("Cookie", $"session={Program.Config.Session}");
+                client.DefaultRequestHeaders.Add("Cookie", $"session={session.Value.Token}");
                 // https://www.reddit.com/r/adventofcode/comments/z9dhtd/please_include_your_contact_info_in_the_useragent/
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("github.com/hymccord/adventofcode by hymccord@gmail.com");
+                client.DefaultRequestHeaders.Add("User-Agent", "github.com/hymccord/adventofcode (hymccord@gmail.com)");
                 var response = await client.GetAsync(INPUT_URL);
 
                 switch (response.StatusCode)
