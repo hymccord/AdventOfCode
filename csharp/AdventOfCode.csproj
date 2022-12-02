@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Solutions\Day0_Template.cs" />
+    <Compile Remove="Solutions\Day0_Template.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="appsettings.local.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

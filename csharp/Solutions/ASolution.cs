@@ -111,10 +111,17 @@ namespace AdventOfCode.Solutions
 
         async Task<string> LoadInputAsync(IOptions<Session> session)
         {
-            string INPUT_FILEPATH = $"Solutions/Year{Year}/Day{Day:D2}input";
-            string INPUT_FILEPATH_ALTERNATE = $"Solutions/Year{Year}/Day{Day:D2}/input";
             string INPUT_URL = $"https://adventofcode.com/{Year}/day/{Day}/input";
-            string input = "";
+            string input = string.Empty;
+
+            string basePath = Environment.CurrentDirectory;
+            while (!File.Exists(Path.Combine(basePath, "AdventOfCode.sln")))
+            {
+                basePath = Directory.GetParent(basePath).FullName;
+            }
+
+            string INPUT_FILEPATH = Path.Combine(basePath, $"Solutions/Year{Year}/Day{Day:D2}input");
+            string INPUT_FILEPATH_ALTERNATE = Path.Combine(basePath, $"Solutions/Year{Year}/Day{Day:D2}/input");
 
             if (File.Exists(INPUT_FILEPATH))
             {
