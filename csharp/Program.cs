@@ -15,7 +15,7 @@ Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
         services.AddSingleton<ISolutionCollector, SolutionCollector>();
-        services.AddHostedService<ConsoleRunner>();
+        services.AddHostedService<SolutionRunner>();
 
         services.Configure<Config>(context.Configuration.GetSection(nameof(Config)));
         services.Configure<Session>(options => options.Token = context.Configuration.GetValue<string>("session"));

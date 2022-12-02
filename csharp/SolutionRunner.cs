@@ -14,13 +14,13 @@ using Microsoft.Extensions.Options;
 
 namespace AdventOfCode;
 
-internal class ConsoleRunner : IHostedService
+internal class SolutionRunner : IHostedService
 {
-    private readonly ILogger<ConsoleRunner> _logger;
+    private readonly ILogger<SolutionRunner> _logger;
     private readonly IOptions<Session> _session;
     private readonly ISolutionCollector _solutionCollector;
 
-    public ConsoleRunner(ILogger<ConsoleRunner> logger,
+    public SolutionRunner(ILogger<SolutionRunner> logger,
         IOptions<Session> session,
         ISolutionCollector solutionCollector)
     {
