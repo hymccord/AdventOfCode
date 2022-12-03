@@ -136,7 +136,7 @@ namespace AdventOfCode.Solutions
                 using var client = new HttpClient();
                 client.DefaultRequestHeaders.Add("Cookie", $"session={session.Value.Token}");
                 // https://www.reddit.com/r/adventofcode/comments/z9dhtd/please_include_your_contact_info_in_the_useragent/
-                client.DefaultRequestHeaders.Add("User-Agent", "github.com/hymccord/adventofcode (hymccord@gmail.com)");
+                client.DefaultRequestHeaders.Add("User-Agent", "github/hymccord (hymccord@gmail.com)");
                 var response = await client.GetAsync(INPUT_URL);
 
                 switch (response.StatusCode)
