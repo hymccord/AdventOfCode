@@ -16,13 +16,13 @@ internal class Day04 : ASolution
     {
         return _lines.Count(nums =>
         {
-            var e1L = nums[0];
-            var e1R = nums[1];
-            var e2L = nums[2];
-            var e2R = nums[3];
+            var a = nums[0];
+            var b = nums[1];
+            var c = nums[2];
+            var d = nums[3];
 
-            return (e1L >= e2L && e1L <= e2R && e1R >= e2L && e1R <= e2R)
-                || (e2L >= e1L && e2L <= e1R && e2R >= e1L && e2R <= e1R);
+            return (a >= c && a <= d && b >= c && b <= d)
+                || (c >= a && c <= b && d >= a && d <= b);
 
             // Slower, but more understandable
             //var s = new HashSet<int>(Enumerable.Range(e1L, e1R - e1L + 1));
@@ -35,13 +35,13 @@ internal class Day04 : ASolution
     {
         return _lines.Count(nums =>
         {
-            var e1L = nums[0];
-            var e1R = nums[1];
-            var e2L = nums[2];
-            var e2R = nums[3];
+            var a = nums[0];
+            var b = nums[1];
+            var c = nums[2];
+            var d = nums[3];
 
-            return (e1L >= e2L && e1L <= e2R || e1R >= e2L && e1R <= e2R)
-                || (e2L >= e1L && e2L <= e1R || e2R >= e1L && e2R <= e1R);
+            return (a >= c && a <= d || b >= c && b <= d)
+                || (c >= a && c <= b || d >= a && d <= b);
 
             //var s = new HashSet<int>(Enumerable.Range(e1L, e1R - e1L + 1));
             //var s2 = new HashSet<int>(Enumerable.Range(e2L, e2R - e2L + 1));
