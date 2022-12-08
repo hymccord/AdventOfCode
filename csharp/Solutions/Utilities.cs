@@ -220,6 +220,16 @@ namespace AdventOfCode.Solutions
             }
         }
 
+        public static int RowLength<T>(this T[,] arr)
+        {
+            return arr.GetLength(1);
+        }
+
+        public static int ColLength<T>(this T[,] arr)
+        {
+            return arr.GetLength(0);
+        }
+
         public static void AddOrUpdate<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, TValue value, Func<TKey, TValue, TValue> updateExisting)
         {
             if (dict.TryGetValue(key, out TValue existing))

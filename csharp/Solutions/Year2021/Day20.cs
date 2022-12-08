@@ -9,7 +9,7 @@ namespace AdventOfCode.Solutions.Year2021
         private char[,] _image;
         int _step = 0;
 
-        public Day20() : base(20, 2021, "Trench Map", false)
+        public Day20() : base(20, 2021, "Trench Map", true)
         {
         }
 
@@ -26,7 +26,7 @@ namespace AdventOfCode.Solutions.Year2021
         {
             while (_step < 2)
             {
-                Convolute();
+                Enhance();
             }
 
             return _image.Flatten().Count(c => c == '#');
@@ -37,26 +37,24 @@ namespace AdventOfCode.Solutions.Year2021
         {
             while (_step < 50)
             {
-                Convolute();
+                Enhance();
             }
 
             return _image.Flatten().Count(c => c == '#');
 
         }
 
-        private void Convolute()
+        private void Enhance()
         {
-            int curRows = _image.GetLength(0);
-            int curCols = _image.GetLength(1);
-            int nextRows = curRows + 2;
-            int nextCols = curCols + 2;
+            int nextRows = _image.RowLength() + 2;
+            int nextCols = _image.ColLength() + 2;
 
             char[,] stepImage = new char[nextRows, nextCols];
             for (int y = 0; y < nextRows; y++)
             {
                 for (int x = 0; x < nextCols; x++)
                 {
-                    Point p = new Point(x - 1, y - 1);
+                    var p = new Point(x - 1, y - 1);
                     stepImage[y, x] = PointTranslate(_image, p);
                 }
             }
