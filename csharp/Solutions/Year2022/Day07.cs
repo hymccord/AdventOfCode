@@ -8,7 +8,7 @@ internal class Day07 : ASolution
 {
     private DeviceDirectory _root;
 
-    public Day07() : base(07, 2022, "", false)
+    public Day07() : base(07, 2022, "No Space Left On Device", false)
     { }
 
     protected override void Preprocess()

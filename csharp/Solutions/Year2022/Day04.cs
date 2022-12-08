@@ -4,7 +4,7 @@ internal class Day04 : ASolution
 {
     private int[][] _lines;
 
-    public Day04() : base(04, 2022, "", false)
+    public Day04() : base(04, 2022, "Camp Cleanup", false)
     { }
 
     protected override void Preprocess()

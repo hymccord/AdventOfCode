@@ -4,7 +4,7 @@ namespace AdventOfCode.Solutions.Year2022;
 
 internal class Day06 : ASolution
 {
-    public Day06() : base(06, 2022, "", false)
+    public Day06() : base(06, 2022, "Tuning Trouble", false)
     { }
 
     protected override object SolvePartOne()

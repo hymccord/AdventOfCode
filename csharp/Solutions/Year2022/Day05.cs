@@ -5,7 +5,7 @@ internal class Day05 : ASolution
     private Dictionary<string, Stack<char>> _stacks = new();
     private List<(string num, string from, string to)> _moves = new();
 
-    public Day05() : base(05, 2022, "", false)
+    public Day05() : base(05, 2022, "Supply Stacks", false)
     {
 
     }
