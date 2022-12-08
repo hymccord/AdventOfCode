@@ -3,9 +3,8 @@
 internal class Day08 : ASolution
 {
     private int[,] _grid;
-    private Dictionary<(int, int), bool> _visited = new();
 
-    public Day08() : base(08, 2022, "", false)
+    public Day08() : base(08, 2022, "Treetop Tree House", false)
     {
 
     }
