@@ -203,6 +203,20 @@ namespace AdventOfCode.Solutions
             }
 
             /// <summary>
+            /// Get all 4 diagonal points.
+            /// </summary>
+            public IEnumerable<Point> DiagonalNeighbors
+            {
+                get
+                {
+                    foreach (var direction in Diagonals)
+                    {
+                        yield return Offset(direction);
+                    }
+                }
+            }
+
+            /// <summary>
             /// Get all 8 surrounding points.
             /// </summary>
             public IEnumerable<Point> SplattNeighbors
@@ -292,6 +306,18 @@ namespace AdventOfCode.Solutions
                 }
             }
 
+            public static IEnumerable<Point> Diagonals
+            {
+                get
+                {
+                    yield return new Point(1, 1);
+                    yield return new Point(1, -1);
+                    yield return new Point(-1, 1);
+                    yield return new Point(-1, -1);
+
+                }
+            }
+
             public static IEnumerable<Point> Splatt
             {
                 get
@@ -300,16 +326,24 @@ namespace AdventOfCode.Solutions
                     {
                         yield return p;
                     }
-                    yield return new Point(1, 1);
-                    yield return new Point(1, -1);
-                    yield return new Point(-1, 1);
-                    yield return new Point(-1, -1);
+
+                    foreach (var p in Diagonals)
+                    {
+                        yield return p;
+                    }
                 }
             }
 
             public int Manhatten(Point p)
             {
                 return Math.Abs(X - p.X) + Math.Abs(Y - p.Y);
+            }
+
+            public double Distance(Point p)
+            {
+                var xDiff = X - p.X;
+                var yDiff = Y - p.Y;
+                return Math.Sqrt(xDiff * xDiff + yDiff * yDiff);
             }
 
             public static Point North = new(0, -1);
