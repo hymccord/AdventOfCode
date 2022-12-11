@@ -4,9 +4,9 @@
 
 internal class Day10 : ASolution
 {
-    private CPU2022 _cpu = default;
+    private CPU2022 _cpu = default!;
 
-    public Day10() : base(10, 2022, "Cathode-Ray Tube", true)
+    public Day10() : base(10, 2022, "Cathode-Ray Tube", false)
     {
 
     }
@@ -42,11 +42,11 @@ internal class Day10 : ASolution
             int pixel = _cpu.Cycle % 40 - 1;
             if (pixel >= (_cpu.Registers['X'] - 1) && pixel <= (_cpu.Registers['X'] + 1))
             {
-                signals.Add('#');
+                signals.Add('█');
             }
             else
             {
-                signals.Add('.');
+                signals.Add(' ');
             }
         };
         _cpu.Run();
@@ -209,7 +209,10 @@ internal class Day10 : ASolution
 
 class CPU2022
 {
+    private Queue<(int, Instruction)> _pipelines = new();
     private Dictionary<char, int> _registers = new Dictionary<char, int>();
+    private int _ip = 0;
+    private int _numPipes = 1;
     private int _cycle = 1;
 
     private Instruction[] _instructions;
@@ -223,7 +226,7 @@ class CPU2022
 
     public int Cycle => _cycle;
 
-    private CPU2022(IEnumerable<string> program)
+    private CPU2022(IEnumerable<string> program, int pipelines = 1)
     {
         _instructions = ParseInstructions(program);
         Reset();
@@ -246,7 +249,9 @@ class CPU2022
         _current = null;
         _registers.Clear();
         _registers['X'] = 1;
+        _pipelines.Clear();
         _cycle = 1;
+        _ip = 0;
 
         Start = null;
         During = null;
@@ -255,27 +260,33 @@ class CPU2022
 
     public void Run()
     {
-        foreach (var instruction in _instructions)
+        while (_ip < _instructions.Length)
         {
-            _current = instruction;
-
-            for (int i = 0; i < _current.Cycles; i++)
+            if (_pipelines.Count < _numPipes)
             {
-                EventCycle();
-                _cycle++;
+                _pipelines.Enqueue((_cycle - 1, _instructions[_ip++]));
+            }
+            // Start
+
+            // During
+            During?.Invoke(this, EventArgs.Empty);
+
+            // After
+            for (int i = 0; i < _pipelines.Count; i++)
+            {
+                (int startCycle, Instruction inst) = _pipelines.Dequeue();
+                if ((startCycle + inst.Cycles) == _cycle)
+                {
+                    inst.Execute(this);
+                }
+                else
+                {
+                    _pipelines.Enqueue((startCycle, inst));
+                }
             }
 
-            _current.Execute(this);
+            _cycle++;
         }
-    }
-
-    private void EventCycle()
-    {
-        Start?.Invoke(this, EventArgs.Empty);
-
-        During?.Invoke(this, EventArgs.Empty);
-
-        After?.Invoke(this, EventArgs.Empty);
     }
 
     private static Instruction[] ParseInstructions(IEnumerable<string> strInstructions)

@@ -43,8 +43,8 @@ internal class Day11 : ASolution
             }
             long divisor = long.Parse(lines[3].Split("by")[1]);
             monkey.Test = (i) => i % divisor == 0;
-            monkey.True = int.Parse(Regex.Match(lines[4], @"\d+").Value);
-            monkey.False = int.Parse(Regex.Match(lines[5], @"\d+").Value);
+            monkey.TrueMonkey = int.Parse(Regex.Match(lines[4], @"\d+").Value);
+            monkey.FalseMonkey = int.Parse(Regex.Match(lines[5], @"\d+").Value);
 
             _monkeys.Add(monkey);
 
@@ -58,7 +58,7 @@ internal class Day11 : ASolution
         {
             foreach (var monkey in _monkeys)
             {
-                monkey.Business(_monkeys);
+                monkey.Business(_monkeys, x => x / 3);
             }
         }
 
@@ -76,15 +76,7 @@ internal class Day11 : ASolution
         {
             foreach (var monkey in _monkeys)
             {
-                monkey.Business(_monkeys, false);
-            }
-
-            foreach (var monkey in _monkeys)
-            {
-                for (int j = 0; j < monkey.Items.Count; j++)
-                {
-                    monkey.Items.Enqueue(monkey.Items.Dequeue() % _factor);
-                }
+                monkey.Business(_monkeys, x => x % _factor);
             }
         }
 
@@ -134,28 +126,24 @@ internal class Day11 : ASolution
         public Queue<long> Items { get; set; }
         public Func<long, long> Operation { get; set; }
         public Func<long, bool> Test { get; set; }
-        public int True { get; set; }
-        public int False { get; set; }
+        public int TrueMonkey { get; set; }
+        public int FalseMonkey { get; set; }
 
-        public void Business(IReadOnlyList<Monkey> monkies, bool worry = true)
+        public void Business(IReadOnlyList<Monkey> monkies, Func<long, long> worry)
         {
             while (Items.Count > 0)
             {
                 Inspects++;
                 var item = Items.Dequeue();
                 item = Operation(item);
-                if (worry)
+                item = worry(item);
+                if (Test(item))
                 {
-                    item = (long)(item / 3.0);
-                }
-                var b = Test(item);
-                if (b)
-                {
-                    monkies[True].Items.Enqueue(item);
+                    monkies[TrueMonkey].Items.Enqueue(item);
                 }
                 else
                 {
-                    monkies[False].Items.Enqueue(item);
+                    monkies[FalseMonkey].Items.Enqueue(item);
                 }
             }
         }
