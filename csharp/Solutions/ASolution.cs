@@ -143,7 +143,7 @@ namespace AdventOfCode.Solutions
                 {
                     case HttpStatusCode.OK:
                         input = await response.Content.ReadAsStringAsync();
-                        _ = File.WriteAllTextAsync(INPUT_FILEPATH, input);
+                        _ = File.WriteAllTextAsync(INPUT_FILEPATH, input.TrimEnd());
                         break;
                     case HttpStatusCode.BadRequest:
                         Console.WriteLine($"Day {Day}: Error code 400 when attempting to retrieve puzzle input through the web client. Your session cookie is probably not recognized.");

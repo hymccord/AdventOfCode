@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode.Options;
 
-partial class Session
+class Session
 {
     private string _token = string.Empty;
 
@@ -15,7 +15,7 @@ partial class Session
         get => _token;
         set
         {
-            if (AoCSessionRegex().IsMatch(value))
+            if (Regex.IsMatch(value, @"^[a-z0-9]+$"))
             {
                 _token = value;
             }
@@ -25,7 +25,4 @@ partial class Session
             }
         }
     }
-
-    [GeneratedRegex("^[a-z0-9]+$")]
-    private static partial Regex AoCSessionRegex();
 }

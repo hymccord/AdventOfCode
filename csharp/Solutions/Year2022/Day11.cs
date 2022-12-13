@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using System.Numerics;
-using System.Text.RegularExpressions.Generated;
 
 namespace AdventOfCode.Solutions.Year2022;
 
