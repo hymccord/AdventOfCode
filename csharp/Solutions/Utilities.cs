@@ -62,6 +62,17 @@ namespace AdventOfCode.Solutions
             }
         }
 
+        public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> nested)
+        {
+            foreach (var nestedItem in nested)
+            {
+                foreach (var item in nestedItem)
+                {
+                    yield return item;
+                }
+            }
+        }
+
         public static string JoinAsStrings<T>(this IEnumerable<T> items, string separator = "")
         {
             return string.Join(separator, items);
@@ -222,12 +233,12 @@ namespace AdventOfCode.Solutions
 
         public static int RowLength<T>(this T[,] arr)
         {
-            return arr.GetLength(1);
+            return arr.GetLength(0);
         }
 
         public static int ColLength<T>(this T[,] arr)
         {
-            return arr.GetLength(0);
+            return arr.GetLength(1);
         }
 
         public static void AddOrUpdate<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, TValue value, Func<TKey, TValue, TValue> updateExisting)
@@ -252,6 +263,43 @@ namespace AdventOfCode.Solutions
                 yield return next;
                 foreach (var child in childSelector(next))
                     stack.Push(child);
+            }
+        }
+
+        public static IEnumerable<IList<TSource>> Window<TSource>(this IEnumerable<TSource> source, int size)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (size <= 0) throw new ArgumentOutOfRangeException(nameof(size));
+
+            return _(); 
+            
+            IEnumerable<IList<TSource>> _()
+            {
+                using var iter = source.GetEnumerator();
+
+                // generate the first window of items
+                var window = new TSource[size];
+                int i;
+                for (i = 0; i < size && iter.MoveNext(); i++)
+                    window[i] = iter.Current;
+
+                if (i < size)
+                    yield break;
+
+                while (iter.MoveNext())
+                {
+                    // generate the next window by shifting forward by one item
+                    // and do that before exposing the data
+                    var newWindow = new TSource[size];
+                    Array.Copy(window, 1, newWindow, 0, size - 1);
+                    newWindow[size - 1] = iter.Current;
+
+                    yield return window;
+                    window = newWindow;
+                }
+
+                // return the last window.
+                yield return window;
             }
         }
     }

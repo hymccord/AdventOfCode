@@ -310,10 +310,10 @@ namespace AdventOfCode.Solutions
             {
                 get
                 {
-                    yield return new Point(1, 1);
-                    yield return new Point(1, -1);
-                    yield return new Point(-1, 1);
-                    yield return new Point(-1, -1);
+                    yield return SouthEast;
+                    yield return NorthEast;
+                    yield return SouthWest;
+                    yield return NorthWest;
 
                 }
             }
@@ -350,6 +350,10 @@ namespace AdventOfCode.Solutions
             public static Point East = new(1, 0);
             public static Point South = new(0, 1);
             public static Point West = new(-1, 0);
+            public static Point NorthEast = new(1, -1);
+            public static Point SouthEast = new(1, 1);
+            public static Point NorthWest = new(-1, -1);
+            public static Point SouthWest = new(-1, 1);
         }
 #nullable restore
 
@@ -388,7 +392,7 @@ namespace AdventOfCode.Solutions
             }
         }
 
-        protected void WriteConsole(int row, int col, short left, short top, char c, ConsoleColor color = ConsoleColor.White)
+        protected void WriteConsole(int row, int col, int left, int top, char c, ConsoleColor color = ConsoleColor.White)
         {
             SafeFileHandle h = OpenConOut();
 
