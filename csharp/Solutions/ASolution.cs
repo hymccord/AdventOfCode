@@ -28,7 +28,7 @@ namespace AdventOfCode.Solutions
     abstract class ASolution : ISolution
     {
         AsyncLazy<string> _input;
-        readonly bool _debugInput;
+        protected readonly bool _debugInput;
         readonly Lazy<string[]> _inputByNewLine;
         readonly Lazy<object> _part1, _part2;
 #if RELEASE
