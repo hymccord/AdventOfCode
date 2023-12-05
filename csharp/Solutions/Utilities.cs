@@ -1,8 +1,11 @@
-﻿/**
+﻿
+
+using System.Runtime.CompilerServices;
+
+/**
  * This utility class is largely based on: 
  * https://github.com/jeroenheijmans/advent-of-code-2018/blob/master/AdventOfCode2018/Util.cs
  */
-
 namespace AdventOfCode.Solutions
 {
 
@@ -301,6 +304,15 @@ namespace AdventOfCode.Solutions
                 // return the last window.
                 yield return window;
             }
+        }
+
+        public static (string, string) SplitInTwo(this string @string, char separator)
+        {
+            return @string.Split(separator, StringSplitOptions.RemoveEmptyEntries) switch
+            {
+                [var v, var i] => (v, i),
+                _ => default
+            };
         }
     }
 }
