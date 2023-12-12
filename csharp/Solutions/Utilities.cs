@@ -19,6 +19,13 @@ namespace AdventOfCode.Solutions
                 .Select(n => Convert.ToInt32(n))
                 .ToArray();
 
+        public static long[] ToLongArray(this string str)
+            => str
+                .Split(new char[] { ' ', '\n' })
+                .Where(n => long.TryParse(n, out long v))
+                .Select(n => Convert.ToInt64(n))
+                .ToArray();
+
         public static int[] ToIntArray(this string str, params char[] separator)
             => str
                 .Split(separator)
