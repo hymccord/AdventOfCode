@@ -194,6 +194,41 @@ namespace AdventOfCode.Solutions
             }
         }
 
+        public static T[,] PadGrid<T>(this T[,] src, T padding, int count = 1)
+        {
+            int rows = src.RowLength();
+            int cols = src.ColLength();
+
+            T[,] paddedArray = new T[
+                src.GetLength(0) + 2 * count,
+                src.GetLength(1) + 2 * count
+            ];
+
+            for (var row = 0; row < rows + 2 * count; row++)
+            {
+                for (var col = 0; col < cols + 2 * count; col++)
+                {
+                    if (row < count || row >= (rows + count))
+                    {
+                        paddedArray[row, col] = padding;
+                    }
+                    else
+                    {
+                        if (col < count || col >= (cols + count))
+                        {
+                            paddedArray[row, col] = padding;
+                        }
+                        else
+                        {
+                            paddedArray[row, col] = src[row - count, col - count];
+                        }
+                    }
+                }
+            }
+
+            return paddedArray;
+        }
+
         public static T[,] Transpose<T>(this T[,] arr)
         {
             int rowCount = arr.GetLength(0);

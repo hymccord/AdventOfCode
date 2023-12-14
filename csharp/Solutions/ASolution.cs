@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
@@ -276,6 +277,16 @@ namespace AdventOfCode.Solutions
                 return new Point(a.X * value, a.Y * value);
             }
 
+            public static implicit operator Point((int x, int y) t)
+            {
+                return new Point(t.x, t.y);
+            }
+
+            public static implicit operator (int X, int Y)(Point p)
+            {
+                return (p.X, p.Y);
+            }
+
             public void Deconstruct(out int x, out int y) =>
                 (x, y) = (X, Y);
 
@@ -356,6 +367,14 @@ namespace AdventOfCode.Solutions
             public static Point SouthWest = new(-1, 1);
         }
 #nullable restore
+
+        protected void WriteCharGrid(char[,] src, short left = 15, short top = 5)
+        {
+            WriteConsole(src.RowLength(), src.ColLength(), left, top, (row, col) =>
+            {
+                return (ConsoleColor.White, src[row, col]);
+            });
+        }
 
         protected void WriteConsole(int rows, int cols, short left, short top, Func<int, int, (ConsoleColor, char)> indexingFunc)
         {
