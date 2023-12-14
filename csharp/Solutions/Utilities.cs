@@ -2,6 +2,8 @@
 
 using System.Runtime.CompilerServices;
 
+using static AdventOfCode.Solutions.ASolution;
+
 /**
  * This utility class is largely based on: 
  * https://github.com/jeroenheijmans/advent-of-code-2018/blob/master/AdventOfCode2018/Util.cs
@@ -154,6 +156,22 @@ namespace AdventOfCode.Solutions
             return dict.TryGetValue(key, out TValue value) ? value : defaultValue;
         }
 
+        public static char[,] To2DCharArray(this string src)
+        {
+            string[] lines = src.SplitByNewline();
+            char[,] dest = new char[lines.Length, lines[0].Length];
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                for (int j = 0; j < lines[0].Length; j++)
+                {
+                    dest[i, j] = lines[i][j];
+                }
+            }
+
+            return dest;
+        }
+
         public static T[,] To2D<T>(this T[][] src)
         {
             try
@@ -284,6 +302,23 @@ namespace AdventOfCode.Solutions
         public static int ColLength<T>(this T[,] arr)
         {
             return arr.GetLength(1);
+        }
+
+        internal static HashSet<Point> GetPointHashset<T>(this T[,] arr, T comparison)
+        {
+            var set = new HashSet<Point>();
+            for (int row = 0; row < arr.RowLength(); row++)
+            {
+                for (int col = 0; col < arr.ColLength(); col++)
+                {
+                    if (EqualityComparer<T>.Default.Equals(arr[row, col], comparison))
+                    {
+                        set.Add((col, row));
+                    }
+                }
+            }
+
+            return set;
         }
 
         public static void AddOrUpdate<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, TValue value, Func<TKey, TValue, TValue> updateExisting)
