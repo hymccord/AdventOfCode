@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
@@ -376,6 +377,14 @@ namespace AdventOfCode.Solutions
             });
         }
 
+        protected void Write2DGrid<T>(T[,] src, short left = 15, short top = 5)
+        {
+            WriteConsole(src.RowLength(), src.ColLength(), left, top, (row, col) =>
+            {
+                return (ConsoleColor.White, src[row, col].ToString()[0]);
+            });
+        }
+
         protected void WriteConsole(int rows, int cols, short left, short top, Func<int, int, (ConsoleColor, char)> indexingFunc)
         {
             SafeFileHandle h = OpenConOut();
@@ -585,13 +594,12 @@ namespace AdventOfCode.Solutions
             public List<Point> A_Star(Point start, Point goal, Func<Point, Point, int> heuristic)
             {
                 var frontier = new PriorityQueue<Point, double>();
+                frontier.Enqueue(start, 0);
 
-                var gScore = new Dictionary<Point, double>();
-                gScore.Add(start, 0);
+                var costSoFar = new Dictionary<Point, double>();
+                costSoFar.Add(start, 0);
 
                 var cameFrom = new Dictionary<Point, Point>();
-
-                frontier.Enqueue(start, heuristic(goal, start));
 
                 while (frontier.Count > 0)
                 {
@@ -600,20 +608,21 @@ namespace AdventOfCode.Solutions
                     if (current == goal)
                         return ReconstructPath(cameFrom, current);
 
-                    foreach (Point neighbor in _grid.GetNeighbors(current))
+                    foreach (Point next in _grid.GetNeighbors(current))
                     {
-                        if (!neighbor.IsInBoundsOfArray(_grid.Height, _grid.Width))
+                        if (!next.IsInBoundsOfArray(_grid.Height, _grid.Width))
                             continue;
 
-                        var tentativeScore = gScore[current] + _grid.Cost(current, neighbor);
-                        if (tentativeScore < gScore.GetValueOrDefault(neighbor, double.MaxValue))
+                        _grid.UpdateCameFrom(cameFrom.AsReadOnly());
+                        var cost = costSoFar[current] + _grid.Cost(current, next);
+                        if (!costSoFar.ContainsKey(next) || cost < costSoFar[next])
                         {
-                            _grid.EnterLoc(current, neighbor);
+                            _grid.EnterLoc(current, next);
 
-                            cameFrom[neighbor] = current;
-                            gScore[neighbor] = tentativeScore;
-                            double priority = tentativeScore + heuristic(goal, neighbor);
-                            frontier.Enqueue(neighbor, priority);
+                            cameFrom[next] = current;
+                            costSoFar[next] = cost;
+                            double priority = cost + heuristic(goal, next);
+                            frontier.Enqueue(next, priority);
                         }
                     }
                 }
@@ -637,6 +646,8 @@ namespace AdventOfCode.Solutions
             public int Height { get; }
 
             internal abstract double Cost(Point from, Point to);
+
+            internal virtual void UpdateCameFrom(ReadOnlyDictionary<Point, Point> cameFrom) { }
             internal virtual void EnterLoc(Point from, Point to) { }
 
             /// <summary>
