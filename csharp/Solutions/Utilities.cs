@@ -1,6 +1,7 @@
 ﻿
 
 using System.Runtime.CompilerServices;
+using System.Text;
 
 using static AdventOfCode.Solutions.ASolution;
 
@@ -319,6 +320,24 @@ namespace AdventOfCode.Solutions
             }
 
             return set;
+        }
+
+        public static string GetSimpleString(this char[,] arr)
+        {
+            var sb = new StringBuilder();
+            var rows = arr.RowLength();
+            var cols = arr.ColLength();
+
+            for (var row = 0; row < rows; row++)
+            {
+                for (int col = 0; col < cols; col++)
+                {
+                    sb.Append(arr[row, col]);
+                }
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
         }
 
         public static void AddOrUpdate<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, TValue value, Func<TKey, TValue, TValue> updateExisting)
