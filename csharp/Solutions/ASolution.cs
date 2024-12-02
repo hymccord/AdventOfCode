@@ -409,7 +409,7 @@ namespace AdventOfCode.Solutions
                     {
                         (color, character) = indexingFunc(y, x);
                         screenBuffer[y * cols + x].Attributes = (ushort)color;
-                        screenBuffer[y * cols + x].Char.AsciiChar = new Windows.Win32.Foundation.CHAR((byte)character);
+                        screenBuffer[y * cols + x].Char.AsciiChar = new Windows.Win32.Foundation.CHAR((sbyte)character);
                     }
                 }
                 PInvoke.WriteConsoleOutput(h,
@@ -485,7 +485,7 @@ namespace AdventOfCode.Solutions
         private SafeFileHandle OpenConOut()
         {
             SafeFileHandle h = PInvoke.CreateFile("CONOUT$",
-                Windows.Win32.Storage.FileSystem.FILE_ACCESS_FLAGS.FILE_GENERIC_READ | Windows.Win32.Storage.FileSystem.FILE_ACCESS_FLAGS.FILE_GENERIC_WRITE,
+                (uint)(Windows.Win32.Storage.FileSystem.FILE_ACCESS_RIGHTS.FILE_GENERIC_READ | Windows.Win32.Storage.FileSystem.FILE_ACCESS_RIGHTS.FILE_GENERIC_WRITE),
                 Windows.Win32.Storage.FileSystem.FILE_SHARE_MODE.FILE_SHARE_READ | Windows.Win32.Storage.FileSystem.FILE_SHARE_MODE.FILE_SHARE_WRITE,
                 null,
                 Windows.Win32.Storage.FileSystem.FILE_CREATION_DISPOSITION.OPEN_EXISTING,
