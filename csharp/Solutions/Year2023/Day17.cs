@@ -19,9 +19,11 @@ internal class Day17 : ASolution
 
         AStar<int> star = new AStar<int>(wg);
 
-        var p = star.Dijkstra((0, 0), (_grid.RowLength() - 1, _grid.ColLength() - 1)).ToHashSet();
+        //var p = star.A_Star((0, 0), (wg.Width - 1, wg.Height - 1), (goal, next) => goal.Manhatten(next)).ToHashSet();
 
-        WriteConsole(wg.Width, wg.Height, 15, 5, (x, y) =>
+        var p = star.A_Star((0, 12), (11, 1), (goal, next) => goal.Manhatten(next)).ToHashSet();
+
+        WriteConsole(wg.Height, wg.Width, 15, 5, (y, x) =>
         {
             var color = ConsoleColor.White;
 
@@ -44,6 +46,11 @@ internal class Day17 : ASolution
     protected override string LoadDebugInput()
     {
         return """
+            14999
+            23111
+            99991
+            """;
+        return """
             2413432311323
             3215453535623
             3255245654254
@@ -62,8 +69,6 @@ internal class Day17 : ASolution
 
     private class ClumsyWeightedGrid : WeightedGrid<int>
     {
-        IReadOnlyDictionary<Point, Point> _cameFrom;
-
         public ClumsyWeightedGrid(int[,] grid) : base(grid)
         {
         }
@@ -71,26 +76,21 @@ internal class Day17 : ASolution
         internal override double Cost(Point from, Point to)
         {
             var clumsy = 0;
-            var totalPath = new List<Point> { from };
-            while (_cameFrom.ContainsKey(from) && totalPath.Count < 4)
-            {
-                from = _cameFrom[from];
-                totalPath.Insert(0, from);
-            }
+            //var totalPath = new List<Point> { from };
+            //while (_cameFrom.ContainsKey(from) && totalPath.Count < 4)
+            //{
+            //    from = _cameFrom[from];
+            //    totalPath.Insert(0, from);
+            //}
 
-            var diffX = Math.Abs(to.X - totalPath[0].X);
-            var diffY = Math.Abs(to.Y - totalPath[0].Y);
-            if ((diffX, diffY) == (0, 4) || (diffX, diffY) == (4, 0))
-            {
-                clumsy += 10000;
-            }
+            //var diffX = Math.Abs(to.X - totalPath[0].X);
+            //var diffY = Math.Abs(to.Y - totalPath[0].Y);
+            //if ((diffX, diffY) == (0, 4) || (diffX, diffY) == (4, 0))
+            //{
+            //    clumsy += 10000;
+            //}
 
-            return _grid[to.Y, to.X] + clumsy;
-        }
-
-        internal override void UpdateCameFrom(ReadOnlyDictionary<Point, Point> cameFrom)
-        {
-            _cameFrom = cameFrom;            
+            return _grid[to.Y, to.X] * _grid[to.Y, to.X] +  clumsy;
         }
     }
 }

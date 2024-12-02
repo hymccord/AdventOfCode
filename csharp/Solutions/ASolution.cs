@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System.Numerics;
 
 using AdventOfCode.Options;
 
@@ -185,10 +186,13 @@ namespace AdventOfCode.Solutions
 #nullable enable
         [DebuggerStepThrough]
         [DebuggerDisplay("{X}, {Y}")]
-        public struct Point : IEquatable<Point>
+        public struct Point : IEquatable<Point>,
+            IAdditionOperators<Point, Point, Point>,
+            ISubtractionOperators<Point, Point, Point>,
+            IUnaryNegationOperators<Point, Point>
         {
-            public int X;
-            public int Y;
+            public readonly int X;
+            public readonly int Y;
 
             /// <summary>
             /// Get NSEW points.
@@ -613,7 +617,6 @@ namespace AdventOfCode.Solutions
                         if (!next.IsInBoundsOfArray(_grid.Height, _grid.Width))
                             continue;
 
-                        _grid.UpdateCameFrom(cameFrom.AsReadOnly());
                         var cost = costSoFar[current] + _grid.Cost(current, next);
                         if (!costSoFar.ContainsKey(next) || cost < costSoFar[next])
                         {
@@ -647,7 +650,6 @@ namespace AdventOfCode.Solutions
 
             internal abstract double Cost(Point from, Point to);
 
-            internal virtual void UpdateCameFrom(ReadOnlyDictionary<Point, Point> cameFrom) { }
             internal virtual void EnterLoc(Point from, Point to) { }
 
             /// <summary>
@@ -657,6 +659,87 @@ namespace AdventOfCode.Solutions
             {
                 return p.Neighbors;
             }
+        }
+
+        internal class AStar<T, TState>
+        {
+            private readonly WeightedGrid<T, TState> _grid;
+
+            public AStar(WeightedGrid<T, TState> grid)
+            {
+                _grid = grid;
+            }
+
+            public virtual List<T> ReconstructPath(Dictionary<T, T> cameFrom, T current)
+            {
+                var totalPath = new List<T> { current };
+                while (cameFrom.ContainsKey(current))
+                {
+                    current = cameFrom[current];
+                    totalPath.Insert(0, current);
+                }
+
+                return totalPath;
+            }
+
+            public ICollection<T> Dijkstra(T start, T goal)
+                => A_Star(start, goal, (goal, next) => 0);
+
+            public List<T> A_Star(T start, T goal, Func<T, T, int> heuristic)
+            {
+                var frontier = new PriorityQueue<T, double>();
+                frontier.Enqueue(start, 0);
+
+                var costSoFar = new Dictionary<T, double>();
+                costSoFar.Add(start, 0);
+
+                var cameFrom = new Dictionary<T, T>();
+
+                while (frontier.Count > 0)
+                {
+                    var current = frontier.Dequeue();
+
+                    if (EqualityComparer<T>.Default.Equals(current, goal))
+                        return ReconstructPath(cameFrom, current);
+
+                    foreach (T next in _grid.GetNeighbors(current))
+                    {
+                        var cost = costSoFar[current] + _grid.Cost(current, next);
+                        if (!costSoFar.ContainsKey(next) || cost < costSoFar[next])
+                        {
+                            _grid.EnterLoc(current, next);
+
+                            cameFrom[next] = current;
+                            costSoFar[next] = cost;
+                            double priority = cost + heuristic(goal, next);
+                            frontier.Enqueue(next, priority);
+                        }
+                    }
+                }
+
+                throw new InvalidOperationException("Could not find path between start and goal");
+            }
+        }
+
+        internal abstract class WeightedGrid<T, TState>
+        {
+            protected readonly T[,] _grid;
+
+            public WeightedGrid(T[,] grid)
+            {
+                _grid = grid;
+                Height = _grid.GetLength(0);
+                Width = _grid.GetLength(1);
+            }
+
+            public int Width { get; }
+            public int Height { get; }
+
+            internal abstract double Cost(T from, T to);
+
+            internal virtual void EnterLoc(T from, T to) { }
+
+            internal abstract IEnumerable<T> GetNeighbors(T p);
         }
     }
 }

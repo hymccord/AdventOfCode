@@ -16,15 +16,15 @@ internal class Day02 : ASolution
 
             if (direction == "forward")
             {
-                p.X += length;
+                p += (length, 0);
             }
             else if (direction == "up")
             {
-                p.Y -= length;
+                p -= (0, length);
             }
             else if (direction == "down")
             {
-                p.Y += length;
+                p += (0, length);
             }
         }
 
@@ -43,8 +43,8 @@ internal class Day02 : ASolution
 
             if (direction == "forward")
             {
-                p.X += length;
-                p.Y += (aim * length);
+                p += (length, 0);
+                p += (0, (aim * length));
             }
             else if (direction == "up")
             {
