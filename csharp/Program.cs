@@ -6,23 +6,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-await Host.CreateDefaultBuilder(args)
-    .ConfigureAppConfiguration((context, config)=>
-    {
-        config.AddUserSecrets<Program>();
-        config.AddJsonFile("appsettings.local.json");
-    })
-    .ConfigureServices((context, services) =>
-    {
-        services.AddSingleton<ISolutionCollector, SolutionCollector>();
-        services.AddHostedService<SolutionRunner>();
+using Spectre.Console.Extensions.Hosting;
 
-        services.Configure<Config>(context.Configuration.GetSection(nameof(Config)));
-        services.Configure<Session>(options => options.Token = context.Configuration.GetValue<string>("session"));
-    })
-    .UseConsoleLifetime(options =>
-    {
-        options.SuppressStatusMessages = true;
-    })
-    .Build()
-    .RunAsync();
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Configuration.AddUserSecrets<Program>();
+builder.Configuration.AddJsonFile("appsettings.local.json");
+
+builder.Services.AddSingleton<ISolutionCollector, SolutionCollector>();
+builder.Services.AddSpectreConsole<SolutionRunnerCommand>(args);
+
+builder.Services.Configure<Config>(builder.Configuration.GetSection(nameof(Config)));
+builder.Services.Configure<Session>(options => options.Token = builder.Configuration.GetValue<string>("session"));
+builder.Services.Configure<ConsoleLifetimeOptions>(static opts => opts.SuppressStatusMessages = true);
+
+var host = builder.Build();
+await host.RunAsync();
