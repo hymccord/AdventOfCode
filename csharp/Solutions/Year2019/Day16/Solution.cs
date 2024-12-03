@@ -1,4 +1,4 @@
-namespace AdventOfCode.Solutions.Year2019
+﻿namespace AdventOfCode.Solutions.Year2019
 {
 
     class Day16 : ASolution
@@ -9,13 +9,16 @@ namespace AdventOfCode.Solutions.Year2019
 
         }
 
-        string test = "12345678";
-        string test2 = "80871224585914546619083218645595";
-        string test3 = "19617804207202209144916044189917";
-        string test4 = "69317163492948606335995924319873";
+        protected override string LoadDebugInput()
+        {
+            return "12345678";
+            //return "80871224585914546619083218645595";
+            //return "19617804207202209144916044189917";
+            //return "69317163492948606335995924319873";
+        }
 
         int[] patten = new int[] { 0, 1, 0, -1 };
-        int pattenLength = 4;
+        //int pattenLength = 4;
         protected override object SolvePartOne()
         {
             var arr = Input.SplitByNewline().First().ToCharArray().Select(c => (int)char.GetNumericValue(c)).ToArray();

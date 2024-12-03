@@ -1,4 +1,4 @@
-namespace AdventOfCode.Solutions.Year2019
+﻿namespace AdventOfCode.Solutions.Year2019
 {
 
     class Day08 : ASolution
@@ -12,10 +12,14 @@ namespace AdventOfCode.Solutions.Year2019
         byte[] _data;
         byte[,] _image;
 
-        string test = "0222112222120000";
         public Day08() : base(8, 2019, "")
         {
 
+        }
+
+        protected override string LoadDebugInput()
+        {
+            return "0222112222120000";
         }
 
         protected override object SolvePartOne()

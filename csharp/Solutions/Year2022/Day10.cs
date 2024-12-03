@@ -216,11 +216,13 @@ class CPU2022
     private int _cycle = 1;
 
     private Instruction[] _instructions;
+#pragma warning disable IDE0052, CS0414 // Remove unread private members
     private Instruction? _current;
 
     public event EventHandler? Start;
     public event EventHandler? During;
     public event EventHandler? After;
+#pragma warning restore IDE0052, CS0414 // Remove unread private members
 
     public IReadOnlyDictionary<char, int> Registers => _registers;
 

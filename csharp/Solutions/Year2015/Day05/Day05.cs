@@ -21,11 +21,6 @@
 
             return c.ToString();
         }
-        string test = @"qjhvhtzxzqqjkmpb
-xxyxx
-uurcxstgmygtbstg
-ieodomkazucvgmuy
-";
 
         protected override object SolvePartTwo()
         {
@@ -40,6 +35,16 @@ ieodomkazucvgmuy
             }
 
             return c.ToString();
+        }
+
+        protected override string LoadDebugInput()
+        {
+            return """
+            qjhvhtzxzqqjkmpb
+            xxyxx
+            uurcxstgmygtbstg
+            ieodomkazucvgmuy
+            """;
         }
     }
 }

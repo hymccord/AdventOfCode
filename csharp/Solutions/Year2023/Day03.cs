@@ -67,8 +67,6 @@ internal class Day03 : ASolution
 
     protected override object SolvePartTwo()
     {
-        long sum = 0;
-
         Dictionary<Point, List<long>> _gears = new();
 
         for (int y = 0; y < _rows; y++)

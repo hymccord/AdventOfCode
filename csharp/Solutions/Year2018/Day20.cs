@@ -60,10 +60,15 @@
             return grid.Count(kvp => kvp.Value > 999);
         }
 
-        static string tinput1 = @"^WNE$";
-        static string tinput2 = @"^ENWWW(NEEE|SSE(EE|N))$";
-        static string tinput3 = @"^ENNWSWW(NEWS|)SSSEEN(WNSE|)EE(SWEN|)NNN$";
-        static string tinput4 = @"^ESSWWN(E|NNENN(EESS(WNSE|)SSS|WWWSSSSE(SW|NNNE)))$";
-        static string tinput5 = @"^WSSEESWWWNW(S|NENNEEEENN(ESSSSW(NWSW|SSEN)|WSWWN(E|WWS(E|SS))))$";
+        protected override string LoadDebugInput()
+        {
+            return
+            @"^WNE$";
+            //@"^ENWWW(NEEE|SSE(EE|N))$";
+            //@"^ENNWSWW(NEWS|)SSSEEN(WNSE|)EE(SWEN|)NNN$";
+            //@"^ESSWWN(E|NNENN(EESS(WNSE|)SSS|WWWSSSSE(SW|NNNE)))$";
+            //@"^WSSEESWWWNW(S|NENNEEEENN(ESSSSW(NWSW|SSEN)|WSWWN(E|WWS(E|SS))))$";
+        }
+
     }
 }

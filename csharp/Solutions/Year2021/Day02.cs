@@ -59,10 +59,16 @@ internal class Day02 : ASolution
         return p.X * p.Y;
     }
 
-    string test = @"forward 5
-down 5
-forward 8
-up 3
-down 8
-forward 2";
+    protected override string LoadDebugInput()
+    {
+        return """
+            forward 5
+            down 5
+            forward 8
+            up 3
+            down 8
+            forward 2
+            """;
+    }
+
 }

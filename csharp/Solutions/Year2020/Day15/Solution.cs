@@ -2,13 +2,17 @@
 {
     class Day15 : ASolution
     {
-        private string Test = @"0,3,6";
-
         public Day15()
             : base(15, 2020, "Rambunctious Recitation")
         {
 
         }
+
+        protected override string LoadDebugInput()
+        {
+            return @"0,3,6";
+        }
+
         protected override object SolvePartOne()
         {
             return Elvish(2020);

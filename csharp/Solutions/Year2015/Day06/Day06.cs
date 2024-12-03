@@ -11,10 +11,12 @@ namespace AdventOfCode.Solutions.Year2015.Day06
         {
         }
 
-        private string test = @"turn on 0,0 through 999,999
-toggle 0,0 through 999,0
-turn off 499,499 through 500,500
-";
+        protected override string LoadDebugInput() =>
+            """
+            turn on 0,0 through 999,999
+            toggle 0,0 through 999,0
+            turn off 499,499 through 500,500
+            """;
 
         protected override object SolvePartOne()
         {
@@ -68,9 +70,11 @@ turn off 499,499 through 500,500
             return grid.Sum(x => x).ToString();
         }
 
-        string test2 = @"turn on 0,0 through 0,0
-toggle 0,0 through 999,999
-";
+        protected override string LoadDebugTwoInput() =>
+            """
+            turn on 0,0 through 0,0
+            toggle 0,0 through 999,999
+            """;
 
         protected override object SolvePartTwo()
         {

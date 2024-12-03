@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 namespace AdventOfCode.Solutions.Year2019
 {
@@ -12,14 +12,19 @@ namespace AdventOfCode.Solutions.Year2019
         Dictionary<Point, int> _points = new Dictionary<Point, int>();
         Dictionary<(int, int), char> _dict = new Dictionary<(int, int), char>();
 
-        //string test = "R8,U5,L5,D3\nU7,R6,D4,L4";
-        string test = "L8,D5,R5,U3\nD7,L6,U4,R4";
-        string test2 = "R75,D30,R83,U83,L12,D49,R71,U7,L72\nU62,R66,U55,R34,D71,R55,D58,R83";
-        string test3 = "R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51\nU98,R91,D20,R16,D67,R40,U7,R15,U6,R7";
+#pragma warning disable IDE0051 // Remove unused private members
+#pragma warning restore IDE0051 // Remove unused private members
+
+        private string[] _testCases = [
+                "R8,U5,L5,D3\nU7,R6,D4,L4",
+                "L8,D5,R5,U3\nD7,L6,U4,R4",
+                "R75,D30,R83,U83,L12,D49,R71,U7,L72\nU62,R66,U55,R34,D71,R55,D58,R83",
+                "R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51\nU98,R91,D20,R16,D67,R40,U7,R15,U6,R7",
+            ];
 
         public Day03() : base(3, 2019, "")
         {
-            var wires = test.SplitByNewline(true);
+            var wires = _testCases[1].SplitByNewline(true);
             _wire1 = wires[0].Split(',');
             _wire2 = wires[1].Split(',');
             _points = new Dictionary<Point, int>();

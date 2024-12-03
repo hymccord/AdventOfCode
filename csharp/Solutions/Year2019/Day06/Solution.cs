@@ -1,34 +1,8 @@
-namespace AdventOfCode.Solutions.Year2019
+﻿namespace AdventOfCode.Solutions.Year2019
 {
 
     class Day06 : ASolution
     {
-        string _test = @"COM)B
-B)C
-D)E
-C)D
-E)F
-B)G
-G)H
-J)K
-D)I
-E)J
-K)L";
-
-        string _test2 = @"COM)B
-B)C
-D)E
-C)D
-E)F
-B)G
-G)H
-J)K
-D)I
-E)J
-K)L
-K)YOU
-I)SAN";
-
         private Dictionary<string, TreeNode<string>> _tree;
         private TreeNode<string> _com;
 
@@ -90,6 +64,42 @@ I)SAN";
                 sanParents.Pop();
             }
             return (youParents.Count + sanParents.Count).ToString();
+        }
+
+        protected override string LoadDebugInput()
+        {
+            return """
+                COM)B
+                B)C
+                D)E
+                C)D
+                E)F
+                B)G
+                G)H
+                J)K
+                D)I
+                E)J
+                K)L
+                """;
+        }
+
+        protected override string LoadDebugTwoInput()
+        {
+            return """
+            COM)B
+            B)C
+            D)E
+            C)D
+            E)F
+            B)G
+            G)H
+            J)K
+            D)I
+            E)J
+            K)L
+            K)YOU
+            I)SAN
+            """;
         }
 
         private Dictionary<string, TreeNode<string>> BuildTree(string input)

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Numerics;
 
 namespace AdventOfCode.Solutions.Year2019
@@ -6,19 +6,27 @@ namespace AdventOfCode.Solutions.Year2019
 
     class Day12 : ASolution
     {
-
-        string test = @"<x=-1, y=0, z=2>
-<x=2, y=-10, z=-7>
-<x=4, y=-8, z=8>
-<x=3, y=5, z=-1>";
-        string test2 = @"<x=-8, y=-10, z=0>
-<x=5, y=5, z=10>
-<x=2, y=-7, z=3>
-<x=9, y=-8, z=-3>";
         private List<Moon> _moons = new List<Moon>();
         public Day12() : base(12, 2019, "")
         {
 
+        }
+
+        protected override string LoadDebugInput()
+        {
+            return """
+                <x=-1, y=0, z=2>
+                <x=2, y=-10, z=-7>
+                <x=4, y=-8, z=8>
+                <x=3, y=5, z=-1>
+                """;
+
+            //return """
+            //    <x=-8, y=-10, z=0>
+            //    <x=5, y=5, z=10>
+            //    <x=2, y=-7, z=3>
+            //    <x=9, y=-8, z=-3>
+            //    """;
         }
 
         protected override object SolvePartOne()

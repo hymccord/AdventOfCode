@@ -6,13 +6,18 @@ namespace AdventOfCode.Solutions.Year2020.Day07
     {
         Dictionary<string, Dictionary<string, int>> _bags = new();
 
-        private string test = @"shiny gold bags contain 2 dark red bags.
-dark red bags contain 2 dark orange bags.
-dark orange bags contain 2 dark yellow bags.
-dark yellow bags contain 2 dark green bags.
-dark green bags contain 2 dark blue bags.
-dark blue bags contain 2 dark violet bags.
-dark violet bags contain no other bags.";
+        protected override string LoadDebugInput()
+        {
+            return """
+                shiny gold bags contain 2 dark red bags.
+                dark red bags contain 2 dark orange bags.
+                dark orange bags contain 2 dark yellow bags.
+                dark yellow bags contain 2 dark green bags.
+                dark green bags contain 2 dark blue bags.
+                dark blue bags contain 2 dark violet bags.
+                dark violet bags contain no other bags.
+                """;
+        }
 
         public Day07()
             : base(07, 2020, "Handy Haversacks")

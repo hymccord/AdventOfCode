@@ -138,7 +138,7 @@ namespace AdventOfCode.Solutions
                 using var client = new HttpClient();
                 client.DefaultRequestHeaders.Add("Cookie", $"session={session.Value.Token}");
                 // https://www.reddit.com/r/adventofcode/comments/z9dhtd/please_include_your_contact_info_in_the_useragent/
-                client.DefaultRequestHeaders.Add("User-Agent", ".NET/7.0 (github.com/hymccord/adventofcode + hymccord@gmail.com)");
+                client.DefaultRequestHeaders.Add("User-Agent", "github.com/hymccord/adventofcode by hymccord(at)gmail.com");
                 var response = await client.GetAsync(INPUT_URL);
 
                 switch (response.StatusCode)
@@ -168,6 +168,8 @@ namespace AdventOfCode.Solutions
         }
 
         protected virtual string LoadDebugInput() => string.Empty;
+
+        protected virtual string LoadDebugTwoInput() => LoadDebugInput();
 
         protected virtual void Preprocess() { }
 

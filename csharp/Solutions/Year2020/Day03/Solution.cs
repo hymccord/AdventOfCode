@@ -6,20 +6,22 @@
         int width;
         int height;
 
-#pragma warning disable IDE0051 // Remove unused private members
-        private readonly string test = @"..##.......
-#...#...#..
-.#....#..#.
-..#.#...#.#
-.#...##..#.
-..#.##.....
-.#.#.#....#
-.#........#
-#.##...#...
-#...##....#
-.#..#...#.#"
-#pragma warning restore IDE0051 // Remove unused private members
-;
+        protected override string LoadDebugInput()
+        {
+            return """
+                ..##.......
+                #...#...#..
+                .#....#..#.
+                ..#.#...#.#
+                .#...##..#.
+                ..#.##.....
+                .#.#.#....#
+                .#........#
+                #.##...#...
+                #...##....#
+                .#..#...#.#
+                """;
+        }
 
         public Day03() : base(3, 2020, "Toboggan Trajectory")
         { }

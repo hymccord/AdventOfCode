@@ -3,7 +3,6 @@
     internal class Day18 : ASolution
     {
         BaseNode[] _inputs;
-        BaseNode _root;
 
         public Day18() : base(18, 2021, "Snailfish", false)
         {
