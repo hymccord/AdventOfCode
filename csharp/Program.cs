@@ -11,14 +11,21 @@ using Spectre.Console.Extensions.Hosting;
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Configuration.AddUserSecrets<Program>();
-builder.Configuration.AddJsonFile("appsettings.local.json");
 
-builder.Services.AddSingleton<ISolutionCollector, SolutionCollector>();
-builder.Services.AddSpectreConsole<SolutionRunnerCommand>(args);
+builder.Services.AddTransient<ISolutionCollector, SolutionCollector>();
+builder.Services.Scan(static scan => scan
+    .FromAssemblyOf<ISolution>()
+    .AddClasses(static classes => classes.AssignableTo<ISolution>())
+        .As<ISolution>()
+        .WithTransientLifetime());
+builder.Services.AddSpectreConsole<SolutionRunnerCommand>(args, configurator =>
+{
 
-builder.Services.Configure<Config>(builder.Configuration.GetSection(nameof(Config)));
-builder.Services.Configure<Session>(options => options.Token = builder.Configuration.GetValue<string>("session"));
+});
+
+builder.Services.Configure<Session>(builder.Configuration.GetSection(nameof(Session)));
 builder.Services.Configure<ConsoleLifetimeOptions>(static opts => opts.SuppressStatusMessages = true);
 
 var host = builder.Build();
+
 await host.RunAsync();

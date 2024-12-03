@@ -14,9 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="appsettings.local.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -31,6 +28,7 @@
     <PackageReference Include="morelinq" Version="4.3.0" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="Rivers" Version="0.1.0" />
+    <PackageReference Include="Scrutor" Version="5.0.2" />
     <PackageReference Include="SpectreConsoleHost" Version="1.1.0" />
     <PackageReference Include="System.Collections.Immutable" Version="9.0.0" />
   </ItemGroup>

@@ -9,8 +9,17 @@ using Spectre.Console.Cli;
 
 namespace AdventOfCode;
 
-internal class SolutionRunnerCommand : Spectre.Console.Cli.AsyncCommand
+internal class SolutionRunnerCommand : Spectre.Console.Cli.AsyncCommand<SolutionRunnerCommand.Settings>
 {
+    public class Settings : CommandSettings
+    {
+        [CommandOption("-y|--year [year]")]
+        public FlagValue<int> Year { get; set; }
+
+        [CommandOption("-d|--day [day]")]
+        public FlagValue<int> Day { get; set; }
+    }
+
     private readonly ILogger<SolutionRunnerCommand> _logger;
     private readonly IOptions<Session> _session;
     private readonly ISolutionCollector _solutionCollector;
@@ -24,43 +33,19 @@ internal class SolutionRunnerCommand : Spectre.Console.Cli.AsyncCommand
         _hostApplicationLifetime = hostApplicationLifetime;
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context)
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
-        IEnumerable<ISolution> solutions = _solutionCollector.GetSolutions();
+        ISolution solution = _solutionCollector.GetSolution(settings.Year.IsSet ? settings.Year.Value : null, settings.Day.IsSet ? settings.Day.Value : null);
 
-        if (!solutions.Any())
+        if (solution is null)
         {
-            _logger.LogWarning("No solutions to run.");
+            _logger.LogWarning("No solution to run.");
             return 1;
         }
 
-        foreach (ISolution solution in solutions)
-        {
-            await solution.RunAsync(_session, _hostApplicationLifetime.ApplicationStopping);
-        }
+        await solution.RunAsync(_session, _hostApplicationLifetime.ApplicationStopping);
 
         return 0;
     }
 }
 
-//public abstract class CancellableAsyncCommand : AsyncCommand
-//{
-//    private readonly ConsoleAppCancellationTokenSource _cancellationTokenSource = new();
-
-//    public abstract Task<int> ExecuteAsync(CommandContext context, CancellationToken cancellation);
-
-//    public sealed override async Task<int> ExecuteAsync(CommandContext context)
-//        => await ExecuteAsync(context, _cancellationTokenSource.Token);
-
-//}
-
-//public abstract class CancellableAsyncCommand<TSettings> : AsyncCommand<TSettings>
-//    where TSettings : CommandSettings
-//{
-//    private readonly ConsoleAppCancellationTokenSource _cancellationTokenSource = new();
-
-//    public abstract Task<int> ExecuteAsync(CommandContext context, TSettings settings, CancellationToken cancellation);
-
-//    public sealed override async Task<int> ExecuteAsync(CommandContext context, TSettings settings)
-//        => await ExecuteAsync(context, settings, _cancellationTokenSource.Token);
-//}

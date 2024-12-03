@@ -1,52 +1,47 @@
-﻿using System.Collections;
-//using System.Composition.Convention;
-//using System.Composition.Hosting;
+﻿#nullable enable
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
 using Microsoft.Extensions.Options;
 
-namespace AdventOfCode.Solutions
+namespace AdventOfCode.Solutions;
+
+internal interface ISolutionCollector
 {
-    internal interface ISolutionCollector
+    ISolution? GetSolution(int? year, int? day);
+}
+class SolutionCollector : ISolutionCollector
+{
+    private readonly IEnumerable<ISolution> _solutions;
+
+    public SolutionCollector(IEnumerable<ISolution> solutions)
     {
-        IEnumerable<ISolution> GetSolutions();
+        _solutions = solutions;
     }
-    class SolutionCollector : ISolutionCollector
+
+    public ISolution? GetSolution(int? year, int? day)
     {
-        private readonly IOptions<Config> _config;
-
-        public SolutionCollector(IOptions<Config> config)
+        IEnumerable<ISolution> solutions = _solutions;
+        if (year is int)
         {
-            _config = config;
+            solutions = solutions.Where(s => s.Year == year);
+        }
+        else
+        {
+            solutions = solutions.Where(s => s.Year == DateTime.Now.Year);
         }
 
-        public IEnumerable<ISolution> GetSolutions()
+        if (day is int)
         {
-            var allSolutions = Assembly.GetExecutingAssembly()
-                .GetTypes()
-                .Where(t => !t.IsAbstract && t.IsAssignableTo(typeof(ISolution)))
-                .Select(Activator.CreateInstance)
-                .Cast<ISolution>();
-
-            IEnumerable<ISolution> filteredSolutions = allSolutions;
-            if (_config.Value.Year is int year)
-            {
-                filteredSolutions = filteredSolutions.Where(s => s.Year == year);
-            }
-
-            if (_config.Value.Days is int[] days && days.Length > 0)
-            {
-                var set = new HashSet<int>(days);
-                filteredSolutions = filteredSolutions.Where(s => set.Contains(s.Day));
-            }
-            else
-            {
-                filteredSolutions = filteredSolutions.Where(s => s.Day == DateTime.Now.Day);
-            }
-
-            return filteredSolutions;
+            solutions = solutions.Where(s => s.Day == day);
         }
+        else
+        {
+            solutions = solutions.Where(s => s.Day == DateTime.Now.Day);
+        }
+
+        return solutions.FirstOrDefault();
     }
 }
