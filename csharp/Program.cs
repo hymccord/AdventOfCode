@@ -20,7 +20,7 @@ builder.Services.Scan(static scan => scan
         .WithTransientLifetime());
 builder.Services.AddSpectreConsole<SolutionRunnerCommand>(args, configurator =>
 {
-
+    configurator.AddCommand<UpdateCommand>("update");
 });
 
 builder.Services.Configure<Session>(builder.Configuration.GetSection(nameof(Session)));

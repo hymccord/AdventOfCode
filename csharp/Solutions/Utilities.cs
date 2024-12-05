@@ -322,6 +322,21 @@ namespace AdventOfCode.Solutions
             return set;
         }
 
+        internal static T At<T>(this T[,] arr, Point p)
+        {
+            return arr[p.Y, p.X];
+        }
+
+        internal static T TryAt<T>(this T[,] arr, Point p, T defaultValue)
+        {
+            if (!p.IsInBoundsOfGrid(arr))
+            {
+                return defaultValue;
+            }
+
+            return arr[p.Y, p.X];
+        }
+
         public static string GetSimpleString(this char[,] arr)
         {
             var sb = new StringBuilder();

@@ -42,7 +42,7 @@ internal class Day15 : ASolution
 
     protected override object SolvePartOne()
     {
-        int y = _debugInput ? 20 : 2_000_000;
+        int y = _useExamples ? 20 : 2_000_000;
         HashSet<Point> points = new HashSet<Point>();
         for (int x = _minX - _maxD; x < _maxX + _maxD; x++)
         {
@@ -64,7 +64,7 @@ internal class Day15 : ASolution
 
     protected override object SolvePartTwo()
     {
-        int space = _debugInput ? 20 : 4_000_000;
+        int space = _useExamples ? 20 : 4_000_000;
         HashSet<Point> points = new HashSet<Point>();
         for (int y = 0; y < space; y++)
         {

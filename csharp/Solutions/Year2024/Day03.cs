@@ -3,9 +3,7 @@
 internal class Day03 : ASolution
 {
     public Day03() : base(03, 2024, "Mull It Over", false)
-    {
-
-    }
+    { }
 
     protected override object SolvePartOne()
     {
@@ -24,10 +22,11 @@ internal class Day03 : ASolution
             .Sum(m => int.Parse(m.Groups[1].Value) * int.Parse(m.Groups[2].Value));
     }
 
-    protected override string LoadDebugInput()
+    protected override IEnumerable<ExampleInput> LoadExampleInput()
     {
-        return """
-        xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))
-        """;
+        return [
+            new ExampleInput("xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))", partOne: 161),
+            new ExampleInput("xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))", partTwo: 48)
+            ];
     }
 }
