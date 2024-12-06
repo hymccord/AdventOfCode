@@ -62,7 +62,7 @@ abstract class ASolution : ISolution
 
     public async Task RunAsync(IOptions<Session> config, CancellationToken cancellationToken)
     {
-        if (LoadExampleInput() is { } examples && examples.Any())
+        if (_useExamples && LoadExampleInput() is { } examples && examples.Any())
         {
             var exampleInputs = examples.ToArray();
             bool correct = await SolveWithExamples(exampleInputs, cancellationToken);
