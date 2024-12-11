@@ -7,7 +7,7 @@ internal class Day06 : ASolution
     int _rows;
     int _cols;
 
-    public Day06() : base(06, 2024, "", true)
+    public Day06() : base(06, 2024, "Guard Gallivant", true)
     { }
 
     protected override void Preprocess()
