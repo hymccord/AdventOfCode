@@ -322,6 +322,23 @@ namespace AdventOfCode.Solutions
             return set;
         }
 
+        internal static HashSet<Point> GetPointHashset<T>(this T[,] arr, Func<T, bool> predicate)
+        {
+            var set = new HashSet<Point>();
+            for (int row = 0; row < arr.RowLength(); row++)
+            {
+                for (int col = 0; col < arr.ColLength(); col++)
+                {
+                    if (predicate(arr[row, col]))
+                    {
+                        set.Add((col, row));
+                    }
+                }
+            }
+
+            return set;
+        }
+
         internal static T At<T>(this T[,] arr, Point p)
         {
             return arr[p.Y, p.X];
