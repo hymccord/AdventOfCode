@@ -146,7 +146,7 @@ abstract class ASolution : ISolution
                 bool correct = example.PartTwo == Convert.ToInt64(_part2);
                 allCorrect &= correct;
                 var color = correct ? "green" : "red";
-                if (_part1 is null)
+                if (_part2 is null)
                 {
                     AnsiConsole.MarkupLine($"Example #{i + 1} Part 2: [grey]Unsolved[/]");
                 }
@@ -237,7 +237,7 @@ abstract class ASolution : ISolution
 
     public class ExampleInput
     {
-        public ExampleInput(string input, int? partOne = null, int? partTwo = null)
+        public ExampleInput(string input, long? partOne = null, long? partTwo = null)
         {
             Input = input;
             PartOne = partOne;
@@ -245,8 +245,8 @@ abstract class ASolution : ISolution
         }
 
         public string Input { get; }
-        public int? PartOne { get; }
-        public int? PartTwo { get; }
+        public long? PartOne { get; }
+        public long? PartTwo { get; }
     }
 
     #region Utility Structs
