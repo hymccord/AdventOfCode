@@ -101,12 +101,26 @@ abstract class ASolution : ISolution
         Preprocess();
 
         _part1 = SolvePartOne();
-        AnsiConsole.MarkupLine($"Part 1: {(Part1 ?? "[grey]Unsolved[/]")}");
+        if (Part1 is not null)
+        {
+            AnsiConsole.MarkupLine($"Part 1: [yellow]{Part1}[/]");
+        }
+        else
+        {
+            AnsiConsole.MarkupLine($"Part 1: [grey]Unsolved[/]");
+        }
 #if RELEASE
         AnsiConsole.MarkupLine($"  (in [yellow]{_perf1:ss\\.fffff}s[/])");
 #endif
         _part2 = SolvePartTwo();
-        AnsiConsole.MarkupLine($"Part 2: {(Part2 ?? "[grey]Unsolved[/]")}");
+        if (Part2 is not null)
+        {
+            AnsiConsole.MarkupLine($"Part 2: [yellow]{Part2}[/]");
+        }
+        else
+        {
+            AnsiConsole.MarkupLine($"Part 2: [grey]Unsolved[/]");
+        }
 #if RELEASE
         AnsiConsole.MarkupLine($"  (in [yellow]{_perf1:ss\\.fffff}s[/])");
 #endif

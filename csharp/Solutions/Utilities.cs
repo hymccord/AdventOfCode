@@ -295,16 +295,6 @@ namespace AdventOfCode.Solutions
             }
         }
 
-        public static int RowLength<T>(this T[,] arr)
-        {
-            return arr.GetLength(0);
-        }
-
-        public static int ColLength<T>(this T[,] arr)
-        {
-            return arr.GetLength(1);
-        }
-
         internal static HashSet<Point> GetPointHashset<T>(this T[,] arr, T comparison)
         {
             var set = new HashSet<Point>();
@@ -441,6 +431,39 @@ namespace AdventOfCode.Solutions
                 [var v, var i] => (v, i),
                 _ => default
             };
+        }
+
+        extension<T>(T[,] arr)
+        {
+            public int RowCount => arr.GetLength(0);
+
+            public int ColCount => arr.GetLength(1);
+
+            public int RowLength()
+            {
+                return arr.GetLength(0);
+            }
+
+            public int ColLength()
+            {
+                return arr.GetLength(1);
+            }
+
+            public IEnumerable<T[]> Rows()
+            {
+                for (int i = 0; i < arr.RowCount; i++)
+                {
+                    yield return arr.SliceRow(i).ToArray();
+                }
+            }
+
+            public IEnumerable<T[]> Cols()
+            {
+                for (int i = 0; i < arr.ColCount; i++)
+                {
+                    yield return arr.SliceColumn(i).ToArray();
+                }
+            }
         }
     }
 }

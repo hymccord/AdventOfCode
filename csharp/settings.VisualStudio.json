@@ -1,4 +1,7 @@
 /* Visual Studio Settings File */
 {
-  "copilot.general.completions.areCopilotCompletionsEnabled": false
+  "copilot.general.completions.areCopilotCompletionsEnabled": false,
+  "textEditor.codeCompletions.general.codeCompletionsProviders": [
+    "intellicode"
+  ]
 }
