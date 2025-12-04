@@ -101,7 +101,14 @@ abstract class ASolution : ISolution
 
         Preprocess();
 
+#if RELEASE
+        var watch = Stopwatch.StartNew();
+#endif
         _part1 = SolvePartOne();
+#if RELEASE
+        _perf1 = watch.Elapsed;
+        watch.Restart();
+#endif
         if (Part1 is not null)
         {
             AnsiConsole.MarkupLine($"Part 1: [yellow]{Part1}[/]");
@@ -114,6 +121,10 @@ abstract class ASolution : ISolution
         AnsiConsole.MarkupLine($"  (in [yellow]{_perf1:ss\\.fffff}s[/])");
 #endif
         _part2 = SolvePartTwo();
+
+#if RELEASE
+        _perf2 = watch.Elapsed;
+#endif
         if (Part2 is not null)
         {
             AnsiConsole.MarkupLine($"Part 2: [yellow]{Part2}[/]");
@@ -123,7 +134,7 @@ abstract class ASolution : ISolution
             AnsiConsole.MarkupLine($"Part 2: [grey]Unsolved[/]");
         }
 #if RELEASE
-        AnsiConsole.MarkupLine($"  (in [yellow]{_perf1:ss\\.fffff}s[/])");
+        AnsiConsole.MarkupLine($"  (in [yellow]{_perf2:ss\\.fffff}s[/])");
 #endif
         return Task.CompletedTask;
     }

@@ -11,19 +11,13 @@ internal class Day04 : ASolution
 
     protected override void Preprocess()
     {
-        _grid = Input.To2DCharArray();
+        _grid = Input.To2DCharArray().PadGrid('.');
     }
 
     protected override object SolvePartOne()
     {
-        var points = _grid.GetPointHashset('@');
-        var initialCount = points.Count;
-
-        var accessible = points.Where(p => p.SplattNeighbors.Intersect(points).Count() < 4);
-
-        points = points.Except(accessible).ToHashSet();
-
-        return initialCount - points.Count;
+        return _grid.GetPointHashset('@')
+            .Count(p => p.SplattNeighbors.Count(n => _grid.At(n) == '@') < 4);
     }
 
     protected override object SolvePartTwo()
@@ -32,18 +26,45 @@ internal class Day04 : ASolution
         var points = _grid.GetPointHashset('@');
         var initialCount = points.Count;
 
-        while (true)
+        Dictionary<Point, int> numNeighbors = points
+            .Select(p =>
+                new KeyValuePair<Point, int>(p, p.SplattNeighbors.Count(p => _grid.TryAt(p, '.') == '@'))
+            )
+            .ToDictionary();
+
+        HashSet<Point> toCheck = numNeighbors
+            .Select(kvp => kvp.Key)
+            .ToHashSet();
+
+        while (toCheck.Count > 0)
         {
-            var accessible = points.Where(p => p.SplattNeighbors.Intersect(points).Count() < 4);
-            if (!accessible.Any())
+            HashSet<Point> modified = [];
+            HashSet<Point> toRemove = [];
+            foreach (var point in toCheck)
             {
-                break;
+                if (numNeighbors[point] < 4)
+                {
+                    toRemove.Add(point);
+                }
             }
 
-            points = points.Except(accessible).ToHashSet();
+            foreach (var point in toRemove)
+            {
+                numNeighbors.Remove(point);
+                point.SplattNeighbors.ForEach(n =>
+                {
+                    if (numNeighbors.TryGetValue(n, out var value) && !toRemove.Contains(n))
+                    {
+                        numNeighbors[n] = --value;
+                        modified.Add(n);
+                    }
+                });
+            }
+
+            toCheck = modified;
         }
 
-        return initialCount - points.Count;
+        return initialCount - numNeighbors.Count;
     }
 
     protected override IEnumerable<ExampleInput> LoadExampleInput()
