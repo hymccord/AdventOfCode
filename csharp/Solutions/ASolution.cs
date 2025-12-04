@@ -51,6 +51,7 @@ abstract class ASolution : ISolution
     public string Part1 => $"{_part1 ?? ""}";
     public string Part2 => $"{_part2 ?? ""}";
     protected bool DebugOutput { get; set; } = false;
+    protected bool RunningSamples { get; private set; } = false;
 
     private protected ASolution(int day, int year, string title = "", bool debug = false)
     {
@@ -129,6 +130,8 @@ abstract class ASolution : ISolution
 
     private async Task<bool> SolveWithExamples(ExampleInput[] examples, CancellationToken cancellation = default)
     {
+        RunningSamples = true;
+
         AnsiConsole.MarkupLine($"--- Day {Day}{(_useExamples ? " ([purple]Example[/])" : "")}: {Title} ---");
         bool allCorrect = true;
         for (var i = 0; i < examples.Length; i++)
@@ -170,6 +173,8 @@ abstract class ASolution : ISolution
                 }
             }
         }
+
+        RunningSamples = false;
 
         return allCorrect;
     }
