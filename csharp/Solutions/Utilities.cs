@@ -32,8 +32,15 @@ namespace AdventOfCode.Solutions
         public static int[] ToIntArray(this string str, params char[] separator)
             => str
                 .Split(separator)
-                .Where(n => int.TryParse(n, out int v))
+                .Where(n => int.TryParse(n, out var v))
                 .Select(n => Convert.ToInt32(n))
+                .ToArray();
+
+        public static long[] ToLongArray(this string str, params char[] separator)
+            => str
+                .Split(separator)
+                .Where(n => long.TryParse(n, out var v))
+                .Select(n => Convert.ToInt64(n))
                 .ToArray();
 
         public static int[,] To2DIntArray(this string str)

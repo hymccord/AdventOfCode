@@ -109,7 +109,7 @@ abstract class ASolution : ISolution
         _perf1 = watch.Elapsed;
         watch.Restart();
 #endif
-        if (Part1 is not null)
+        if (_part1 is not null)
         {
             AnsiConsole.MarkupLine($"Part 1: [yellow]{Part1}[/]");
         }
@@ -125,7 +125,7 @@ abstract class ASolution : ISolution
 #if RELEASE
         _perf2 = watch.Elapsed;
 #endif
-        if (Part2 is not null)
+        if (_part2 is not null)
         {
             AnsiConsole.MarkupLine($"Part 2: [yellow]{Part2}[/]");
         }
