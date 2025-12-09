@@ -351,6 +351,18 @@ namespace AdventOfCode.Solutions
             return arr[p.Y, p.X];
         }
 
+        internal static bool TryAt<T>(this T[,] arr, Point p, out T value)
+        {
+            if (!p.IsInBoundsOfGrid(arr))
+            {
+                value = default(T);
+                return false;
+            }
+
+            value = arr[p.Y, p.X];
+            return true;
+        }
+
         public static string GetSimpleString(this char[,] arr)
         {
             var sb = new StringBuilder();
